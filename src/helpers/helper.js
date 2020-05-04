@@ -18,5 +18,5 @@ export const getUserFromSession = () => {
 };
 
 export const setUserToSession = (user) => {
-  sessionStorage.setItem("user", user);
+  sessionStorage.setItem("user", JSON.stringify(user));
 };

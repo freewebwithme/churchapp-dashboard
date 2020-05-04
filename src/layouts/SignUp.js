@@ -1,5 +1,5 @@
 import React from "react";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -70,8 +70,8 @@ export default function SignUp() {
   const [signUp, { loading }] = useMutation(SIGN_UP, {
     onCompleted(data) {
       console.log(data);
-      sessionStorage.setItem("user-token", data.signIn.token);
-      sessionStorage.setItem("user", JSON.stringify(data.signIn.user));
+      sessionStorage.setItem("user-token", data.signUp.token);
+      sessionStorage.setItem("user", JSON.stringify(data.signUp.user));
       history.push("/dashboard")
     },
     onError(error) {

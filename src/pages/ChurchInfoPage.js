@@ -2,11 +2,9 @@ import React from "react";
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import CustomInput from "components/CustomInput/CustomInput.js";
 
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Button from "components/CustomButtons/Button.js";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
@@ -15,10 +13,11 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
+import { useHistory } from "react-router-dom";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
-import { getUserFromSession } from "../helpers/helper.js";
+import { getUserFromSession, setUserToSession } from "../helpers/helper.js";
 import { CREATE_CHURCH, ME } from "../queries/Query.js";
 import { ChurchInfoForm } from "./ChurchInfoForm.js";
 import Loading from "./components/Loading.js";
@@ -56,23 +55,41 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ChurchInfoPage() {
+  let currentUser = getUserFromSession();
   const classes = useStyles();
-
-  const currentUser = getUserFromSession();
+  const history = useHistory();
+  const [user, setUser] = React.useState(currentUser);
 
   const [modalOpen, setModalOpen] = React.useState(false);
 
-  const { loading: loadingMe, error: errorMe, data: dataMe } = useQuery(ME);
+  const {
+    loading: loadingMe,
+    error: errorMe,
+    data: dataMe,
+    refetch: refetchMe,
+    networkStatus,
+  } = useQuery(ME, {
+    notifyOnNetworkStatusChange: true,
+    onCompleted(data) {
+      setUserToSession(data.me);
+      currentUser = getUserFromSession();
+      // set user for updating UI
+      setUser(currentUser);
+    },
+  });
 
   const [createChurch, { loading }] = useMutation(CREATE_CHURCH, {
     onCompleted(data) {
       console.log("Printing from onCompleted: ", data);
+      refetchMe();
+      history.push("/dashboard");
     },
     onError(error) {
       console.log("Printing from onError: ", error);
     },
   });
 
+  if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
   if (loading) return <p>Loading....</p>;
   if (loadingMe) return <p>Loading....</p>;
 
@@ -90,7 +107,7 @@ export default function ChurchInfoPage() {
 
   return (
     <GridContainer>
-      {currentUser.church ? (
+      {user.church ? (
         <GridItem xs={12}>
           <Card>
             <CardContent className={classes.cardContent}>

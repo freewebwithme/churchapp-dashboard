@@ -14,6 +14,7 @@ import Container from "@material-ui/core/Container";
 
 import { useMutation } from "@apollo/react-hooks";
 import { SIGN_IN } from "../queries/Query.js";
+import {setUserToSession} from "../helpers/helper.js";
 
 function Copyright() {
   return (
@@ -60,7 +61,7 @@ export default function SignIn() {
     onCompleted(data) {
       console.log("printing from sign in completed", data.signIn.user);
       sessionStorage.setItem("user-token", data.signIn.token);
-      sessionStorage.setItem("user", JSON.stringify(data.signIn.user));
+      setUserToSession(data.signIn.user);
       let { from } = location.state || { from: { pathname: "/dashboard" } };
       history.replace("/dashboard");
     },
