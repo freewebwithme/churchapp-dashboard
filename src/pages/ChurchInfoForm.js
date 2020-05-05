@@ -10,45 +10,49 @@ import CardContent from "@material-ui/core/CardContent";
 
 import { getUserFromSession } from "../helpers/helper.js";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: "50ch"
+    width: "50ch",
   },
   formTitle: {
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(2),
-    fontSize: 28
+    fontSize: 28,
   },
   formSubtitle: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   cardContent: {
-    padding: theme.spacing(5)
-  }
+    padding: theme.spacing(5),
+  },
 }));
-export const ChurchInfoForm = props => {
+export const ChurchInfoForm = (props) => {
   const classes = useStyles();
-  const { title, create, update } = props;
+  const { title, create, update, church } = props;
 
-  const [churchName, setChurchName] = React.useState("");
-  const [channelId, setChannelId] = React.useState("");
-  const [churchIntro, setChurchIntro] = React.useState("");
+  const [churchName, setChurchName] = React.useState(church ? church.name : "");
+  const [channelId, setChannelId] = React.useState(
+    church ? church.channelId : ""
+  );
+  const [churchIntro, setChurchIntro] = React.useState(
+    church ? church.intro : ""
+  );
 
   const [
     churchNameValidationState,
-    setChurchNameValidationState
+    setChurchNameValidationState,
   ] = React.useState("");
 
   const [
     churchIntroValidationState,
-    setChurchIntroValidationState
+    setChurchIntroValidationState,
   ] = React.useState("");
 
   const [
     channelIdValidationState,
-    setChannelIdValidationState
+    setChannelIdValidationState,
   ] = React.useState("");
 
   const validateLength = (prop, minLength, maxLength) => {
@@ -68,7 +72,11 @@ export const ChurchInfoForm = props => {
       churchIntroValidationState === "error" ||
       churchIntroValidationState === ""
     ) {
-      return false;
+      if (churchName === "" || churchIntro === "" || channelId === "") {
+        return false;
+      } else {
+        return true;
+      }
     } else {
       return true;
     }
@@ -76,17 +84,31 @@ export const ChurchInfoForm = props => {
 
   const currentUser = getUserFromSession();
 
+  console.log("printing create function: ", create);
   const handleSubmit = () => {
     console.log("Printing from handleSubmit: ");
     if (validateForm()) {
-      create({
-        variables: {
-          name: churchName,
-          channelId: channelId,
-          intro: churchIntro,
-          userId: currentUser.id
-        }
-      });
+      if (create !== undefined) {
+        create({
+          variables: {
+            name: churchName,
+            channelId: channelId,
+            intro: churchIntro,
+            userId: currentUser.id,
+          },
+        });
+      }
+      if (update !== undefined) {
+        console.log("Printing from update function: ", church);
+        update({
+          variables: {
+            churchId: church.id,
+            name: churchName,
+            channelId: channelId,
+            intro: churchIntro,
+          },
+        });
+      }
     } else {
       console.log("not validated form");
     }
@@ -107,21 +129,22 @@ export const ChurchInfoForm = props => {
                     className={classes.textField}
                     formControlProps={{
                       style: {
-                        width: "50ch"
-                      }
+                        width: "50ch",
+                      },
                     }}
                     inputProps={{
-                      onChange: e => {
+                      onChange: (e) => {
                         if (validateLength(churchName, 4, 16)) {
                           setChurchNameValidationState("success");
                         } else {
                           setChurchNameValidationState("error");
                         }
                         setChurchName(e.target.value);
-                      }
+                      },
+                      defaultValue: church ? church.name : "",
                     }}
                     labelProps={{
-                      style: { fontSize: 16, paddingBottom: 20 }
+                      style: { fontSize: 16, paddingBottom: 20 },
                     }}
                     helperText="3자 이상 15자 이하로 적어주세요"
                   />
@@ -134,21 +157,22 @@ export const ChurchInfoForm = props => {
                     className={classes.textField}
                     formControlProps={{
                       style: {
-                        width: "50ch"
-                      }
+                        width: "50ch",
+                      },
                     }}
                     inputProps={{
-                      onChange: e => {
+                      onChange: (e) => {
                         if (validateLength(channelId, 10, 30)) {
                           setChannelIdValidationState("success");
                         } else {
                           setChannelIdValidationState("error");
                         }
                         setChannelId(e.target.value);
-                      }
+                      },
+                      defaultValue: church ? church.channelId : "",
                     }}
                     labelProps={{
-                      style: { fontSize: 16, paddingBottom: 20 }
+                      style: { fontSize: 16, paddingBottom: 20 },
                     }}
                     helperText="유투브에서 교회 채널에 들어가시면  https://www.youtube.com/channel/XXX 나옵니다.  channel/ 뒤에 나오는 XXX 부분이 채널 아이디 입니다."
                   />
@@ -161,11 +185,11 @@ export const ChurchInfoForm = props => {
                     className={classes.textField}
                     formControlProps={{
                       style: {
-                        width: "50ch"
-                      }
+                        width: "50ch",
+                      },
                     }}
                     inputProps={{
-                      onChange: e => {
+                      onChange: (e) => {
                         if (validateLength(churchIntro, 9, 249)) {
                           setChurchIntroValidationState("success");
                         } else {
@@ -173,10 +197,11 @@ export const ChurchInfoForm = props => {
                         }
                         setChurchIntro(e.target.value);
                       },
-                      multiline: true
+                      multiline: true,
+                      defaultValue: church ? church.intro : "",
                     }}
                     labelProps={{
-                      style: { fontSize: 16, paddingBottom: 20 }
+                      style: { fontSize: 16, paddingBottom: 20 },
                     }}
                     helperText="교회 소개란에 표시될 내용을 적어주세요.(10자 이상, 250자 미만)"
                   />

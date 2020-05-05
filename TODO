@@ -1,3 +1,2 @@
-[TODO] 4/28/2020
-1. Refactor upload image card.
-2. Flutter.
+[TODO] 5/5/2020 
+- when updating church info with prepopulated value, can't validate, because onChange didn't happen.(DONE)

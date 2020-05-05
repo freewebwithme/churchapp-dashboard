@@ -18,7 +18,7 @@ import { useHistory } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
 import { getUserFromSession, setUserToSession } from "../helpers/helper.js";
-import { CREATE_CHURCH, ME } from "../queries/Query.js";
+import { CREATE_CHURCH, ME, UPDATE_CHURCH } from "../queries/Query.js";
 import { ChurchInfoForm } from "./ChurchInfoForm.js";
 import Loading from "./components/Loading.js";
 
@@ -59,6 +59,7 @@ export default function ChurchInfoPage() {
   const classes = useStyles();
   const history = useHistory();
   const [user, setUser] = React.useState(currentUser);
+  const [church, setChurch] = React.useState(currentUser.church);
 
   const [modalOpen, setModalOpen] = React.useState(false);
 
@@ -70,11 +71,14 @@ export default function ChurchInfoPage() {
     networkStatus,
   } = useQuery(ME, {
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: "cache-and-network",
     onCompleted(data) {
       setUserToSession(data.me);
       currentUser = getUserFromSession();
       // set user for updating UI
       setUser(currentUser);
+      setChurch(data.me.church);
+      console.log("Printing church info: ", data.me.church);
     },
   });
 
@@ -89,13 +93,24 @@ export default function ChurchInfoPage() {
     },
   });
 
-  if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
-  if (loading) return <p>Loading....</p>;
-  if (loadingMe) return <p>Loading....</p>;
+  // Update Church
+  const [updateChurch, { loading: loadingUpdate }] = useMutation(
+    UPDATE_CHURCH,
+    {
+      onCompleted(data) {
+        console.log("Printing from onCompleted updateChurch: ", data);
+        setModalOpen(false);
+        refetchMe();
+        history.push("/dashboard");
+      },
+      onError(error) {
+        console.log("Printing from onError updateChurch: ", error);
+      },
+    }
+  );
 
-  const church = dataMe.me.church;
-  sessionStorage.setItem("user", JSON.stringify(dataMe.me));
-  console.log("Printing DataMe: ", dataMe);
+  if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
+  if (loading || loadingMe || loadingUpdate) return <p>Loading....</p>;
 
   const handleOpen = () => {
     setModalOpen(true);
@@ -134,7 +149,6 @@ export default function ChurchInfoPage() {
         <ChurchInfoForm
           title="교회 정보가 없습니다. 교회 정보를 등록하세요"
           create={createChurch}
-          update={createChurch}
         />
       )}
       <GridItem xs={12} sm={12} md={12} lg={12}>
@@ -151,8 +165,8 @@ export default function ChurchInfoPage() {
           <Fade in={modalOpen}>
             <ChurchInfoForm
               title="교회 정보 수정"
-              create={createChurch}
-              update={createChurch}
+              update={updateChurch}
+              church={user.church}
             />
           </Fade>
         </Modal>

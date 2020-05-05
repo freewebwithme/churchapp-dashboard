@@ -8,7 +8,14 @@ export const SIGN_IN = gql`
         name
         email
         church {
+          id
           name
+          intro
+          uuid
+          channelId
+          slideImageOne
+          slideImageTwo
+          slideImageThree
         }
       }
       token
@@ -29,6 +36,7 @@ export const CREATE_CHURCH = gql`
       channelId: $channelId
       userId: $userId
     ) {
+      id
       name
       uuid
       channelId
@@ -53,6 +61,7 @@ export const ME = gql`
       email
       name
       church {
+        id
         name
         intro
         channelId
@@ -63,6 +72,34 @@ export const ME = gql`
         latestVideos {
           videoId
         }
+      }
+    }
+  }
+`;
+
+export const UPDATE_CHURCH = gql`
+  mutation(
+    $churchId: String!
+    $name: String!
+    $channelId: String!
+    $intro: String!
+  ) {
+    updateChurch(
+      churchId: $churchId
+      name: $name
+      channelId: $channelId
+      intro: $intro
+    ) {
+      id
+      name
+      intro
+      channelId
+      slideImageOne
+      slideImageTwo
+      slideImageThree
+      uuid
+      latestVideos {
+        videoId
       }
     }
   }
