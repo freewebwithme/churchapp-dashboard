@@ -29,15 +29,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export const ChurchInfoForm = (props) => {
+  const returnDefaultValue = (church, value) => {
+    if (church === null) {
+      return "";
+    } else if (church[value] === null) {
+      return "";
+    } else {
+      return church[value];
+    }
+  };
   const classes = useStyles();
   const { title, create, update, church } = props;
 
-  const [churchName, setChurchName] = React.useState(church ? church.name : "");
+  const [churchName, setChurchName] = React.useState(
+    returnDefaultValue(church, "name")
+  );
   const [channelId, setChannelId] = React.useState(
-    church ? church.channelId : ""
+    returnDefaultValue(church, "channelId")
   );
   const [churchIntro, setChurchIntro] = React.useState(
-    church ? church.intro : ""
+    returnDefaultValue(church, "intro")
+  );
+
+  const [churchAddressLineOne, setChurchAddressLineOne] = React.useState(
+    returnDefaultValue(church, "addressLineOne")
+  );
+  const [churchAddressLineTwo, setChurchAddressLineTwo] = React.useState(
+    returnDefaultValue(church, "addressLineTwo")
+  );
+
+  const [churchEmail, setChurchEmail] = React.useState(
+    returnDefaultValue(church, "email")
+  );
+  const [churchPhonenumber, setChurchPhonenumber] = React.useState(
+    returnDefaultValue(church, "phoneNumber")
   );
 
   const [
@@ -55,6 +80,21 @@ export const ChurchInfoForm = (props) => {
     setChannelIdValidationState,
   ] = React.useState("");
 
+  const [
+    churchAddressLineOneState,
+    setChurchAddressLineOneState,
+  ] = React.useState("");
+  const [
+    churchAddressLineTwoState,
+    setChurchAddressLineTwoState,
+  ] = React.useState("");
+
+  const [churchEmailState, setChurchEmailState] = React.useState("");
+
+  const [churchPhonenumberState, setChurchPhonenumberState] = React.useState(
+    ""
+  );
+
   const validateLength = (prop, minLength, maxLength) => {
     if (prop.length < minLength || prop.length > maxLength) {
       return false;
@@ -70,9 +110,25 @@ export const ChurchInfoForm = (props) => {
       channelIdValidationState === "error" ||
       channelIdValidationState === "" ||
       churchIntroValidationState === "error" ||
-      churchIntroValidationState === ""
+      churchIntroValidationState === "" ||
+      churchAddressLineOneState === "error" ||
+      churchAddressLineOneState === "" ||
+      churchAddressLineTwoState === "error" ||
+      churchAddressLineTwoState === "" ||
+      churchEmailState === "error" ||
+      churchEmailState === "" ||
+      churchPhonenumberState === "error" ||
+      churchPhonenumberState === ""
     ) {
-      if (churchName === "" || churchIntro === "" || channelId === "") {
+      if (
+        churchName === "" ||
+        churchIntro === "" ||
+        channelId === "" ||
+        churchAddressLineOne === "" ||
+        churchAddressLineTwo === "" ||
+        churchEmail === "" ||
+        churchPhonenumber === ""
+      ) {
         return false;
       } else {
         return true;
@@ -84,6 +140,7 @@ export const ChurchInfoForm = (props) => {
 
   const currentUser = getUserFromSession();
 
+  console.log("Printing form validate?", validateForm());
   console.log("printing create function: ", create);
   const handleSubmit = () => {
     console.log("Printing from handleSubmit: ");
@@ -106,6 +163,10 @@ export const ChurchInfoForm = (props) => {
             name: churchName,
             channelId: channelId,
             intro: churchIntro,
+            addressLineOne: churchAddressLineOne,
+            addressLineTwo: churchAddressLineTwo,
+            email: churchEmail,
+            phoneNumber: churchPhonenumber,
           },
         });
       }
@@ -204,6 +265,106 @@ export const ChurchInfoForm = (props) => {
                       style: { fontSize: 16, paddingBottom: 20 },
                     }}
                     helperText="교회 소개란에 표시될 내용을 적어주세요.(10자 이상, 250자 미만)"
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CustomInput
+                    error={churchAddressLineOneState === "error"}
+                    success={churchAddressLineOneState === "success"}
+                    labelText="교회 주소 첫번째 라인"
+                    className={classes.textField}
+                    helperText="ex) 777 Vermon Ave"
+                    formControlProps={{
+                      style: {
+                        width: "50ch",
+                      },
+                    }}
+                    inputProps={{
+                      onChange: (e) => {
+                        if (validateLength(churchAddressLineOne, 3, 50)) {
+                          setChurchAddressLineOneState("success");
+                        } else {
+                          setChurchAddressLineOneState("error");
+                        }
+                        setChurchAddressLineOne(e.target.value);
+                      },
+                      defaultValue: church ? church.addressLineOne : "",
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CustomInput
+                    error={churchAddressLineTwoState === "error"}
+                    success={churchAddressLineTwoState === "success"}
+                    labelText="교회 주소 두번째 라인"
+                    className={classes.textField}
+                    helperText="ex) Los Angeles, CA 90020"
+                    formControlProps={{
+                      style: {
+                        width: "50ch",
+                      },
+                    }}
+                    inputProps={{
+                      onChange: (e) => {
+                        if (validateLength(churchAddressLineTwo, 3, 50)) {
+                          setChurchAddressLineTwoState("success");
+                        } else {
+                          setChurchAddressLineTwoState("error");
+                        }
+                        setChurchAddressLineTwo(e.target.value);
+                      },
+                      defaultValue: church ? church.addressLineTwo : "",
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CustomInput
+                    error={churchEmailState === "error"}
+                    success={churchEmailState === "success"}
+                    labelText="교회 이메일"
+                    helperText="ex) church@email.com"
+                    className={classes.textField}
+                    formControlProps={{
+                      style: {
+                        width: "50ch",
+                      },
+                    }}
+                    inputProps={{
+                      onChange: (e) => {
+                        if (validateLength(churchEmail, 5, 20)) {
+                          setChurchEmailState("success");
+                        } else {
+                          setChurchEmailState("error");
+                        }
+                        setChurchEmail(e.target.value);
+                      },
+                      defaultValue: church ? church.email : "",
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CustomInput
+                    error={churchPhonenumberState === "error"}
+                    success={churchPhonenumberState === "success"}
+                    labelText="교회 전화번호"
+                    helperText="ex) 2134445555"
+                    className={classes.textField}
+                    formControlProps={{
+                      style: {
+                        width: "50ch",
+                      },
+                    }}
+                    inputProps={{
+                      onChange: (e) => {
+                        if (validateLength(churchPhonenumber, 5, 15)) {
+                          setChurchPhonenumberState("success");
+                        } else {
+                          setChurchPhonenumberState("error");
+                        }
+                        setChurchPhonenumber(e.target.value);
+                      },
+                      defaultValue: church ? church.phoneNumber : "",
+                    }}
                   />
                 </GridItem>
               </GridContainer>

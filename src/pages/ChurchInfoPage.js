@@ -8,7 +8,6 @@ import GridItem from "components/Grid/GridItem.js";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Fab from "@material-ui/core/Fab";
@@ -44,11 +43,6 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     padding: theme.spacing(5),
   },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
@@ -60,8 +54,6 @@ export default function ChurchInfoPage() {
   const history = useHistory();
   const [user, setUser] = React.useState(currentUser);
   const [church, setChurch] = React.useState(currentUser.church);
-
-  const [modalOpen, setModalOpen] = React.useState(false);
 
   const {
     loading: loadingMe,
@@ -93,32 +85,8 @@ export default function ChurchInfoPage() {
     },
   });
 
-  // Update Church
-  const [updateChurch, { loading: loadingUpdate }] = useMutation(
-    UPDATE_CHURCH,
-    {
-      onCompleted(data) {
-        console.log("Printing from onCompleted updateChurch: ", data);
-        setModalOpen(false);
-        refetchMe();
-        history.push("/dashboard");
-      },
-      onError(error) {
-        console.log("Printing from onError updateChurch: ", error);
-      },
-    }
-  );
-
   if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
-  if (loading || loadingMe || loadingUpdate) return <p>Loading....</p>;
-
-  const handleOpen = () => {
-    setModalOpen(true);
-  };
-
-  const handleClose = () => {
-    setModalOpen(false);
-  };
+  if (loading || loadingMe) return <p>Loading....</p>;
 
   return (
     <GridContainer>
@@ -127,14 +95,20 @@ export default function ChurchInfoPage() {
           <Card>
             <CardContent className={classes.cardContent}>
               <h3>교회 정보</h3>
-              <h5>{church.name}</h5>
-              <h6>{church.channelId}</h6>
-              <h6>{church.uuid}</h6>
-              <p>{church.intro}</p>
+              <h5>교회 이름: {church.name}</h5>
+              <h6>Youtube 채널 아이디: {church.channelId}</h6>
+              <p>교회 소개: {church.intro}</p>
+              <p>교회 주소</p>
+              <p>{church.addressLineOne}</p>
+              <p>{church.addressLineTwo}</p>
+              <p>이메일</p>
+              <p>{church.email}</p>
+              <p>전화번호</p>
+              <p>{church.phoneNumber}</p>
             </CardContent>
             <CardActions className={classes.cardContent}>
               <Fab
-                onClick={() => handleOpen()}
+                onClick={() => history.push("/dashboard/edit-church")}
                 variant="extended"
                 color="primary"
                 aria-label="edit"
@@ -151,26 +125,6 @@ export default function ChurchInfoPage() {
           create={createChurch}
         />
       )}
-      <GridItem xs={12} sm={12} md={12} lg={12}>
-        <Modal
-          open={modalOpen}
-          aria-labelledby="Church Info"
-          aria-describedby="Church Info"
-          className={classes.modal}
-          onClose={handleClose}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{ timeout: 500 }}
-        >
-          <Fade in={modalOpen}>
-            <ChurchInfoForm
-              title="교회 정보 수정"
-              update={updateChurch}
-              church={user.church}
-            />
-          </Fade>
-        </Modal>
-      </GridItem>
       <GridItem xs={12} sm={6} md={6} lg={3}></GridItem>
       <GridItem xs={12} sm={6} md={6} lg={3}></GridItem>
     </GridContainer>

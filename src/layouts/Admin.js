@@ -14,7 +14,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import ChurchInfoPage from "../pages/ChurchInfoPage.js";
-import SlideImagePage from "../pages/SlideImagePage.js";
+import { EditChurchInfoPage } from "../pages/EditChurchInfoPage";
 import OfferingPage from "../pages/OfferingPage.js";
 
 import routes from "routes.js";
@@ -172,9 +172,9 @@ export default function Dashboard(props) {
             <Switch>
               <Route path="/dashboard" exact component={ChurchInfoPage} />
               <Route
-                path="/dashboard/slide-image"
+                path="/dashboard/edit-church"
                 exact
-                component={SlideImagePage}
+                component={EditChurchInfoPage}
               />
               <Route
                 path="/dashboard/offering"

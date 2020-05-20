@@ -13,9 +13,19 @@ export const SIGN_IN = gql`
           intro
           uuid
           channelId
-          slideImageOne
-          slideImageTwo
-          slideImageThree
+          addressLineOne
+          addressLineTwo
+          phoneNumber
+          email
+          schedules {
+            serviceName
+            serviceTime
+          }
+          employees {
+            name
+            position
+            profile_image
+          }
         }
       }
       token
@@ -38,11 +48,22 @@ export const CREATE_CHURCH = gql`
     ) {
       id
       name
+      intro
       uuid
       channelId
-      slideImageOne
-      slideImageTwo
-      slideImageThree
+      addressLineOne
+      addressLineTwo
+      phoneNumber
+      email
+      schedules {
+        serviceName
+        serviceTime
+      }
+      employees {
+        name
+        position
+        profile_image
+      }
       user {
         email
         name
@@ -64,13 +85,20 @@ export const ME = gql`
         id
         name
         intro
-        channelId
-        slideImageOne
-        slideImageTwo
-        slideImageThree
         uuid
-        latestVideos {
-          videoId
+        channelId
+        addressLineOne
+        addressLineTwo
+        phoneNumber
+        email
+        schedules {
+          serviceName
+          serviceTime
+        }
+        employees {
+          name
+          position
+          profile_image
         }
       }
     }
@@ -83,23 +111,38 @@ export const UPDATE_CHURCH = gql`
     $name: String!
     $channelId: String!
     $intro: String!
+    $addressLineOne: String
+    $addressLineTwo: String
+    $email: String
+    $phoneNumber: String
   ) {
     updateChurch(
       churchId: $churchId
       name: $name
       channelId: $channelId
       intro: $intro
+      addressLineOne: $addressLineOne
+      addressLineTwo: $addressLineTwo
+      email: $email
+      phoneNumber: $phoneNumber
     ) {
       id
       name
       intro
-      channelId
-      slideImageOne
-      slideImageTwo
-      slideImageThree
       uuid
-      latestVideos {
-        videoId
+      channelId
+      addressLineOne
+      addressLineTwo
+      phoneNumber
+      email
+      schedules {
+        serviceName
+        serviceTime
+      }
+      employees {
+        name
+        position
+        profileImage
       }
     }
   }
