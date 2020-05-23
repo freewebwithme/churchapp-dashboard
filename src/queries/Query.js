@@ -20,6 +20,7 @@ export const SIGN_IN = gql`
           schedules {
             serviceName
             serviceTime
+            order
           }
           employees {
             name
@@ -58,6 +59,7 @@ export const CREATE_CHURCH = gql`
       schedules {
         serviceName
         serviceTime
+        order
       }
       employees {
         name
@@ -94,6 +96,7 @@ export const ME = gql`
         schedules {
           serviceName
           serviceTime
+          order
         }
         employees {
           name
@@ -138,6 +141,7 @@ export const UPDATE_CHURCH = gql`
       schedules {
         serviceName
         serviceTime
+        order
       }
       employees {
         name
@@ -156,6 +160,16 @@ export const GET_PRESIGNED_URL = gql`
       userId: $userId
     ) {
       url
+    }
+  }
+`;
+
+export const UPDATE_SERVICE_INFO = gql`
+  mutation($churchId: String!, $schedules: String!) {
+    updateServiceInfo(churchId: $churchId, schedules: $schedules) {
+      id
+      name
+      intro
     }
   }
 `;

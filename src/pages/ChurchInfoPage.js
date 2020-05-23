@@ -3,23 +3,27 @@ import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
+import NavPills from "components/NavPills/NavPills.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
+import CardHeader from "components/Card/CardHeader.js";
+import CardBody from "components/Card/CardBody.js";
 import Fab from "@material-ui/core/Fab";
 import EditIcon from "@material-ui/icons/Edit";
 import { useHistory } from "react-router-dom";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
-import { getUserFromSession, setUserToSession } from "../helpers/helper.js";
-import { CREATE_CHURCH, ME, UPDATE_CHURCH } from "../queries/Query.js";
+import {
+  getUserFromSession,
+  setUserToSession,
+  sortArray,
+} from "../helpers/helper.js";
+import { CREATE_CHURCH, ME } from "../queries/Query.js";
 import { ChurchInfoForm } from "./ChurchInfoForm.js";
 import Loading from "./components/Loading.js";
+import { cardTitle } from "assets/jss/material-dashboard-pro-react.js";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -46,9 +50,13 @@ const useStyles = makeStyles((theme) => ({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
+  headerText: {
+    fontWeight: "bold",
+  },
+  cardTitle,
 }));
 
-export default function ChurchInfoPage() {
+export function ChurchInfoPage() {
   let currentUser = getUserFromSession();
   const classes = useStyles();
   const history = useHistory();
@@ -86,47 +94,180 @@ export default function ChurchInfoPage() {
   });
 
   if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
-  if (loading || loadingMe) return <p>Loading....</p>;
+  if (loading || loadingMe) return <Loading />;
 
+  let schedules = currentUser.church.schedules;
+  let sortedSchedules = sortArray(schedules);
+  console.log("Printing sorted schedules", sortedSchedules);
   return (
     <GridContainer>
       {user.church ? (
         <GridItem xs={12}>
           <Card>
-            <CardContent className={classes.cardContent}>
-              <h3>교회 정보</h3>
-              <h5>교회 이름: {church.name}</h5>
-              <h6>Youtube 채널 아이디: {church.channelId}</h6>
-              <p>교회 소개: {church.intro}</p>
-              <p>교회 주소</p>
-              <p>{church.addressLineOne}</p>
-              <p>{church.addressLineTwo}</p>
-              <p>이메일</p>
-              <p>{church.email}</p>
-              <p>전화번호</p>
-              <p>{church.phoneNumber}</p>
-            </CardContent>
-            <CardActions className={classes.cardContent}>
-              <Fab
-                onClick={() => history.push("/dashboard/edit-church")}
-                variant="extended"
+            <CardHeader>
+              <h4 className={classes.cardTitle}>
+                교회 정보 <small> - 앱에 표시되는 기본 정보입니다</small>
+              </h4>
+            </CardHeader>
+            <CardBody>
+              <NavPills
                 color="primary"
-                aria-label="edit"
-              >
-                <EditIcon className={classes.extendedIcon} />
-                수정하기
-              </Fab>
-            </CardActions>
+                tabs={[
+                  {
+                    tabButton: "기본정보",
+                    tabContent: (
+                      <span>
+                        <h5 className={classes.headerText}>교회 이름</h5>
+                        <h6>{church.name}</h6>
+                        <br />
+                        <h5 className={classes.headerText}>
+                          Youtube 채널 아이디
+                        </h5>
+                        <h6>{church.channelId}</h6>
+                        <br />
+                        <h5 className={classes.headerText}>교회 소개</h5>
+                        <p>{church.intro}</p>
+                        <br />
+                        <br />
+                        <Fab
+                          onClick={() => history.push("/dashboard/edit-church")}
+                          variant="extended"
+                          color="primary"
+                          aria-label="edit"
+                        >
+                          <EditIcon className={classes.extendedIcon} />
+                          수정하기
+                        </Fab>
+                        <br />
+                      </span>
+                    ),
+                  },
+                  {
+                    tabButton: "교회 주소",
+                    tabContent: (
+                      <span>
+                        <h5 className={classes.headerText}>교회 주소</h5>
+                        {church.addressLineOne && church.addressLineTwo ? (
+                          <span>
+                            <h6>{church.addressLineOne}</h6>
+                            <h6>{church.addressLineTwo}</h6>
+                          </span>
+                        ) : (
+                          <h6>등록된 주소가 없습니다.</h6>
+                        )}
+                        <br />
+                        <br />
+                        <Fab
+                          onClick={() => history.push("/dashboard/edit-church")}
+                          variant="extended"
+                          color="primary"
+                          aria-label="edit"
+                        >
+                          <EditIcon className={classes.extendedIcon} />
+                          수정하기
+                        </Fab>
+                      </span>
+                    ),
+                  },
+                  {
+                    tabButton: "연락처",
+                    tabContent: (
+                      <span>
+                        <h5 className={classes.headerText}>이메일</h5>
+                        {church.email ? (
+                          <h6>{church.email}</h6>
+                        ) : (
+                          <h6>등록된 이메일이 없습니다.</h6>
+                        )}
+                        <br />
+                        <h5 className={classes.headerText}>전화번호</h5>
+                        {church.phoneNumber ? (
+                          <p>
+                            <span>({church.phoneNumber.slice(0, 3)})</span>
+                            <span> {church.phoneNumber.slice(3, 6)}</span>
+                            <span> - </span>
+                            <span>{church.phoneNumber.slice(6, 10)}</span>
+                          </p>
+                        ) : (
+                          <h6>등록된 전화번호가 없습니다.</h6>
+                        )}
+                        <br />
+                        <br />
+                        <Fab
+                          onClick={() => history.push("/dashboard/edit-church")}
+                          variant="extended"
+                          color="primary"
+                          aria-label="edit"
+                        >
+                          <EditIcon className={classes.extendedIcon} />
+                          수정하기
+                        </Fab>
+                      </span>
+                    ),
+                  },
+                  {
+                    tabButton: "예배시간",
+                    tabContent: (
+                      <span>
+                        <h5 className={classes.headerText}>예배 시간 안내</h5>
+                        <br />
+                        {church.schedules.length === 0 ? (
+                          <span>
+                            <h6>
+                              등록된 내용이 없습니다. 예배 시간을 등록 하세요.
+                            </h6>
+                            <br />
+                            <br />
+                            <Fab
+                              onClick={() =>
+                                history.push("/dashboard/edit-service-info")
+                              }
+                              variant="extended"
+                              color="primary"
+                              aria-label="edit"
+                            >
+                              <EditIcon className={classes.extendedIcon} />
+                              등록하기
+                            </Fab>
+                          </span>
+                        ) : (
+                          <span>
+                            {sortedSchedules.map((info) => (
+                              <li key={info.order.toString()}>
+                                {info.serviceName} - {info.serviceTime}
+                              </li>
+                            ))}
+
+                            <br />
+                            <Fab
+                              onClick={() =>
+                                history.push("/dashboard/edit-service-info")
+                              }
+                              variant="extended"
+                              color="primary"
+                              aria-label="edit"
+                            >
+                              <EditIcon className={classes.extendedIcon} />
+                              수정하기
+                            </Fab>
+                          </span>
+                        )}
+                      </span>
+                    ),
+                  },
+                ]}
+              />
+            </CardBody>
           </Card>
         </GridItem>
       ) : (
-        <ChurchInfoForm
-          title="교회 정보가 없습니다. 교회 정보를 등록하세요"
-          create={createChurch}
-        />
+        <GridItem xs={12}>
+          <ChurchInfoForm
+            title="교회 정보가 없습니다. 교회 정보를 등록하세요"
+            create={createChurch}
+          />
+        </GridItem>
       )}
-      <GridItem xs={12} sm={6} md={6} lg={3}></GridItem>
-      <GridItem xs={12} sm={6} md={6} lg={3}></GridItem>
     </GridContainer>
   );
 }

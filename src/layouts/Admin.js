@@ -13,8 +13,11 @@ import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
-import ChurchInfoPage from "../pages/ChurchInfoPage.js";
+import { ChurchInfoPage } from "../pages/ChurchInfoPage.js";
+import { EmployeePage } from "../pages/EmployeePage.js";
 import { EditChurchInfoPage } from "../pages/EditChurchInfoPage";
+import { EditServiceInfoPage } from "../pages/EditServiceInfoPage";
+
 import OfferingPage from "../pages/OfferingPage.js";
 
 import routes from "routes.js";
@@ -175,6 +178,16 @@ export default function Dashboard(props) {
                 path="/dashboard/edit-church"
                 exact
                 component={EditChurchInfoPage}
+              />
+              <Route
+                path="/dashboard/edit-service-info"
+                exact
+                component={EditServiceInfoPage}
+              />
+              <Route
+                path="/dashboard/employee"
+                exact
+                component={EmployeePage}
               />
               <Route
                 path="/dashboard/offering"
