@@ -26,6 +26,7 @@ export const SIGN_IN = gql`
             name
             position
             profile_image
+            order
           }
         }
       }
@@ -65,6 +66,7 @@ export const CREATE_CHURCH = gql`
         name
         position
         profile_image
+        order
       }
       user {
         email
@@ -102,6 +104,7 @@ export const ME = gql`
           name
           position
           profile_image
+          order
         }
       }
     }
@@ -147,6 +150,7 @@ export const UPDATE_CHURCH = gql`
         name
         position
         profileImage
+        order
       }
     }
   }
