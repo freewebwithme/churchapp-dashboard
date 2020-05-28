@@ -23,6 +23,7 @@ export const SIGN_IN = gql`
             order
           }
           employees {
+            id
             name
             position
             profile_image
@@ -63,6 +64,7 @@ export const CREATE_CHURCH = gql`
         order
       }
       employees {
+        id
         name
         position
         profile_image
@@ -101,6 +103,7 @@ export const ME = gql`
           order
         }
         employees {
+          id
           name
           position
           profile_image
@@ -147,11 +150,62 @@ export const UPDATE_CHURCH = gql`
         order
       }
       employees {
+        id
         name
         position
         profileImage
         order
       }
+    }
+  }
+`;
+
+export const CREATE_EMPLOYEE = gql`
+  mutation(
+    $name: String!
+    $position: String!
+    $profileImage: String
+    $churchId: String!
+    $order: String!
+  ) {
+    createEmployee(
+      name: $name
+      position: $position
+      profileImage: $profileImage
+      churchId: $churchId
+      order: $order
+    ) {
+      id
+      name
+      position
+      profileImage
+      order
+    }
+  }
+`;
+
+export const UPDATE_EMPLOYEE = gql`
+  mutation(
+    $id: ID!
+    $name: String!
+    $position: String!
+    $profileImage: String
+    $churchId: String!
+    $order: String!
+  ) {
+    updateEmployee(
+      id: $id
+      name: $name
+      position: $position
+      profileImage: $profileImage
+      churchId: $churchId
+      order: $order
+    ) {
+      id
+      name
+      position
+      profileImage
+      order
     }
   }
 `;

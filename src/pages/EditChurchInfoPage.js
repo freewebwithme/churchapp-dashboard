@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 import { getUserFromSession, setUserToSession } from "../helpers/helper.js";
 import { ME, UPDATE_CHURCH } from "../queries/Query.js";
-import { ChurchInfoForm } from "./ChurchInfoForm";
+import { ChurchInfoForm } from "./components/ChurchInfoForm";
 import Loading from "./components/Loading";
 
 export const EditChurchInfoPage = () => {

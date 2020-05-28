@@ -21,7 +21,7 @@ import {
   sortArray,
 } from "../helpers/helper.js";
 import { CREATE_CHURCH, ME } from "../queries/Query.js";
-import { ChurchInfoForm } from "./ChurchInfoForm.js";
+import { ChurchInfoForm } from "./components/ChurchInfoForm.js";
 import Loading from "./components/Loading.js";
 import { cardTitle } from "assets/jss/material-dashboard-pro-react.js";
 
@@ -93,7 +93,18 @@ export function ChurchInfoPage() {
     },
   });
 
-  if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
+  if (networkStatus === 4) {
+    return (
+      <GridContainer>
+        <GridItem xs={12}>
+          <Loading />
+        </GridItem>
+        <GridItem xs={12}>
+          <p>새로운 정보를 불러오는 중입니다...</p>;
+        </GridItem>
+      </GridContainer>
+    );
+  }
   if (loading || loadingMe) return <Loading />;
 
   let schedules = currentUser.church.schedules;

@@ -25,3 +25,17 @@ export const sortArray = (array) => {
   array.sort((a, b) => a.order - b.order);
   return array;
 };
+
+export const getFileExtension = (file) => {
+  let extensions = ["jpg", "jpeg", "png"];
+  let extension = file.name.split(".").pop();
+  if (extensions.indexOf(extension) === -1) {
+    return null;
+  } else {
+    return extension;
+  }
+};
+
+export const isNumber = (n) => {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};

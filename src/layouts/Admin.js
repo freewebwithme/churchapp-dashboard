@@ -17,6 +17,7 @@ import { ChurchInfoPage } from "../pages/ChurchInfoPage.js";
 import { EmployeePage } from "../pages/EmployeePage.js";
 import { EditChurchInfoPage } from "../pages/EditChurchInfoPage";
 import { EditServiceInfoPage } from "../pages/EditServiceInfoPage";
+import SlideImagePage from "../pages/SlideImagePage";
 
 import OfferingPage from "../pages/OfferingPage.js";
 

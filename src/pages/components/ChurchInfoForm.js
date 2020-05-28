@@ -7,7 +7,7 @@ import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import { getUserFromSession } from "../helpers/helper.js";
+import { getUserFromSession } from "../../helpers/helper.js";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
