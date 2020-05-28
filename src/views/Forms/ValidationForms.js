@@ -41,7 +41,7 @@ export default function ValidationForms() {
   );
   const [
     registerConfirmPasswordState,
-    setregisterConfirmPasswordState
+    setregisterConfirmPasswordState,
   ] = React.useState("");
   const [registerCheckbox, setregisterCheckbox] = React.useState(false);
   const [registerCheckboxState, setregisterCheckboxState] = React.useState("");
@@ -74,7 +74,7 @@ export default function ValidationForms() {
   const [maxValue, setmaxValue] = React.useState("");
   const [maxValueState, setmaxValueState] = React.useState("");
   // function that returns true if value is email, false otherwise
-  const verifyEmail = value => {
+  const verifyEmail = (value) => {
     var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (emailRex.test(value)) {
       return true;
@@ -89,7 +89,7 @@ export default function ValidationForms() {
     return false;
   };
   // function that verifies if value contains only numbers
-  const verifyNumber = value => {
+  const verifyNumber = (value) => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -97,7 +97,7 @@ export default function ValidationForms() {
     return false;
   };
   // verifies if value is a valid URL
-  const verifyUrl = value => {
+  const verifyUrl = (value) => {
     try {
       new URL(value);
       return true;
@@ -180,10 +180,10 @@ export default function ValidationForms() {
                 labelText="Email Address *"
                 id="registeremail"
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
                 inputProps={{
-                  onChange: event => {
+                  onChange: (event) => {
                     if (verifyEmail(event.target.value)) {
                       setregisterEmailState("success");
                     } else {
@@ -191,7 +191,7 @@ export default function ValidationForms() {
                     }
                     setregisterEmail(event.target.value);
                   },
-                  type: "email"
+                  type: "email",
                 }}
               />
               <CustomInput
@@ -200,10 +200,10 @@ export default function ValidationForms() {
                 labelText="Password *"
                 id="registerpassword"
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
                 inputProps={{
-                  onChange: event => {
+                  onChange: (event) => {
                     if (verifyLength(event.target.value, 1)) {
                       setregisterPasswordState("success");
                     } else {
@@ -212,7 +212,7 @@ export default function ValidationForms() {
                     setregisterPassword(event.target.value);
                   },
                   type: "password",
-                  autoComplete: "off"
+                  autoComplete: "off",
                 }}
               />
               <CustomInput
@@ -221,10 +221,10 @@ export default function ValidationForms() {
                 labelText="Confirm Password *"
                 id="registerconfirmpassword"
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
                 inputProps={{
-                  onChange: event => {
+                  onChange: (event) => {
                     if (registerPassword === event.target.value) {
                       setregisterConfirmPasswordState("success");
                     } else {
@@ -233,7 +233,7 @@ export default function ValidationForms() {
                     setregisterConfirmPassword(event.target.value);
                   },
                   type: "password",
-                  autoComplete: "off"
+                  autoComplete: "off",
                 }}
               />
               <div className={classes.formCategory}>
@@ -243,7 +243,7 @@ export default function ValidationForms() {
                 control={
                   <Checkbox
                     tabIndex={-1}
-                    onClick={event => {
+                    onClick={(event) => {
                       if (event.target.checked) {
                         setregisterCheckboxState("success");
                       } else {
@@ -255,7 +255,7 @@ export default function ValidationForms() {
                     icon={<Check className={classes.uncheckedIcon} />}
                     classes={{
                       checked: classes.checked,
-                      root: classes.checkRoot
+                      root: classes.checkRoot,
                     }}
                   />
                 }
@@ -264,7 +264,7 @@ export default function ValidationForms() {
                     classes.label +
                     (registerCheckboxState === "error"
                       ? " " + classes.labelError
-                      : "")
+                      : ""),
                 }}
                 label="Subscribe to newsletter"
               />
@@ -295,10 +295,10 @@ export default function ValidationForms() {
                 labelText="Email Address *"
                 id="loginemail"
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
                 inputProps={{
-                  onChange: event => {
+                  onChange: (event) => {
                     if (verifyEmail(event.target.value)) {
                       setloginEmailState("success");
                     } else {
@@ -306,7 +306,7 @@ export default function ValidationForms() {
                     }
                     setloginEmail(event.target.value);
                   },
-                  type: "email"
+                  type: "email",
                 }}
               />
               <CustomInput
@@ -315,10 +315,10 @@ export default function ValidationForms() {
                 labelText="Password *"
                 id="loginpassword"
                 formControlProps={{
-                  fullWidth: true
+                  fullWidth: true,
                 }}
                 inputProps={{
-                  onChange: event => {
+                  onChange: (event) => {
                     if (verifyLength(event.target.value, 1)) {
                       setloginPasswordState("success");
                     } else {
@@ -327,7 +327,7 @@ export default function ValidationForms() {
                     setloginPassword(event.target.value);
                   },
                   type: "password",
-                  autoComplete: "off"
+                  autoComplete: "off",
                 }}
               />
               <div className={classes.formCategory}>
@@ -363,10 +363,10 @@ export default function ValidationForms() {
                     error={requiredState === "error"}
                     id="required"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (verifyLength(event.target.value, 0)) {
                           setrequiredState("success");
                         } else {
@@ -380,9 +380,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -404,10 +402,10 @@ export default function ValidationForms() {
                     error={typeEmailState === "error"}
                     id="typeemail"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (verifyEmail(event.target.value)) {
                           settypeEmailState("success");
                         } else {
@@ -421,9 +419,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -445,10 +441,10 @@ export default function ValidationForms() {
                     error={numberState === "error"}
                     id="number"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (verifyNumber(event.target.value)) {
                           setnumberState("success");
                         } else {
@@ -462,9 +458,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -484,10 +478,10 @@ export default function ValidationForms() {
                     error={urlState === "error"}
                     id="url"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (verifyUrl(event.target.value)) {
                           seturlState("success");
                         } else {
@@ -501,9 +495,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -525,19 +517,17 @@ export default function ValidationForms() {
                     error={equalToState === "error"}
                     id="equalto"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => setequalTo(event.target.value),
+                      onChange: (event) => setequalTo(event.target.value),
                       type: "text",
                       endAdornment:
                         equalToState === "error" ? (
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -547,10 +537,10 @@ export default function ValidationForms() {
                     error={equalToState === "error"}
                     id="whichequalto"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (equalTo === event.target.value) {
                           setequalToState("success");
                         } else {
@@ -564,9 +554,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -606,10 +594,10 @@ export default function ValidationForms() {
                     error={minLengthState === "error"}
                     id="minlength"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (verifyLength(event.target.value, 5)) {
                           setminLengthState("success");
                         } else {
@@ -623,9 +611,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -647,10 +633,10 @@ export default function ValidationForms() {
                     error={maxLengthState === "error"}
                     id="maxlength"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (!verifyLength(event.target.value, 6)) {
                           setmaxLengthState("success");
                         } else {
@@ -664,9 +650,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -688,10 +672,10 @@ export default function ValidationForms() {
                     error={rangeState === "error"}
                     id="range"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (
                           verifyNumber(event.target.value) &&
                           event.target.value >= 6 &&
@@ -709,9 +693,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -733,10 +715,10 @@ export default function ValidationForms() {
                     error={minValueState === "error"}
                     id="minvalue"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (
                           verifyNumber(event.target.value) &&
                           event.target.value >= 6
@@ -753,9 +735,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>
@@ -777,10 +757,10 @@ export default function ValidationForms() {
                     error={maxValueState === "error"}
                     id="maxvalue"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
                     }}
                     inputProps={{
-                      onChange: event => {
+                      onChange: (event) => {
                         if (
                           verifyNumber(event.target.value) &&
                           event.target.value <= 6
@@ -797,9 +777,7 @@ export default function ValidationForms() {
                           <InputAdornment position="end">
                             <Close className={classes.danger} />
                           </InputAdornment>
-                        ) : (
-                          undefined
-                        )
+                        ) : undefined,
                     }}
                   />
                 </GridItem>

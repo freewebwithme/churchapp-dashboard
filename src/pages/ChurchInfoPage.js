@@ -107,6 +107,7 @@ export function ChurchInfoPage() {
   }
   if (loading || loadingMe) return <Loading />;
 
+  // Sort schedules by order
   let schedules = currentUser.church.schedules;
   let sortedSchedules = sortArray(schedules);
   console.log("Printing sorted schedules", sortedSchedules);

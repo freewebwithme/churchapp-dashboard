@@ -1,9 +1,15 @@
 import { ChurchInfoPage } from "pages/ChurchInfoPage.js";
 import { EmployeePage } from "pages/EmployeePage.js";
+import { NewsPage } from "pages/NewsPage.js";
 import Loading from "pages/components/Loading.js";
 
 // @material-ui/icons
-import { ImportContacts, AttachMoney, Group } from "@material-ui/icons";
+import {
+  ImportContacts,
+  AttachMoney,
+  Group,
+  Announcement,
+} from "@material-ui/icons";
 
 var dashRoutes = [
   {
@@ -18,6 +24,13 @@ var dashRoutes = [
     name: "섬기는 분들",
     icon: Group,
     component: EmployeePage,
+    layout: "/dashboard",
+  },
+  {
+    path: "/news",
+    name: "교회 소식",
+    icon: Announcement,
+    component: NewsPage,
     layout: "/dashboard",
   },
   {

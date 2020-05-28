@@ -11,37 +11,51 @@ import { getUserFromSession, isNumber } from "../../helpers/helper.js";
 
 export function EmployeeForm(props) {
   let currentUser = getUserFromSession();
+  const {
+    title,
+    modal,
+    setModal,
+    create,
+    update,
+    employee,
+    setEmployee,
+  } = props;
 
-  const { title, modal, setModal, create, update } = props;
-  const [name, setName] = React.useState("");
-  const [position, setPosition] = React.useState("");
-  const [order, setOrder] = React.useState(1);
-
-  const [employeeNameState, setEmployeeNameState] = React.useState(null);
-  const [employeePositionState, setEmployeePositionState] = React.useState(
-    null
+  function initEmployeeState(employee, propName) {
+    if (employee != null) {
+      return employee[propName];
+    }
+    return "";
+  }
+  const [name, setName] = React.useState(initEmployeeState(employee, "name"));
+  const [position, setPosition] = React.useState(
+    initEmployeeState(employee, "position")
   );
-  const [employeeOrderState, setEmployeeOrderState] = React.useState(null);
+  // TODO: There is a bug in validating order number
+  // When I type just 1 it didnt' validate
+  // Because setOrder doens't set 1 in on Change event.
+  const [order, setOrder] = React.useState(
+    initEmployeeState(employee, "order")
+  );
+
+  const [employeeNameState, setEmployeeNameState] = React.useState("");
+  const [employeePositionState, setEmployeePositionState] = React.useState("");
+  const [employeeOrderState, setEmployeeOrderState] = React.useState("");
 
   function handleClose() {
     setName("");
     setPosition("");
-    setOrder(1);
-    setEmployeeNameState(null);
-    setEmployeePositionState(null);
-    setEmployeeOrderState(null);
-    setModal(false);
-  }
-
-  function validateForm() {
-    if (
-      employeeNameState === "success" &&
-      employeePositionState === "success" &&
-      employeeOrderState === "success"
-    ) {
-      return true;
+    setOrder("");
+    setEmployeeNameState("");
+    setEmployeePositionState("");
+    setEmployeeOrderState("");
+    // I need to set currentEmployee prop to null
+    // In this way, I can draw new Employee update form with selected
+    // employee
+    if (setEmployee != null) {
+      setEmployee(null);
     }
-    return false;
+    setModal(false);
   }
 
   function verifyLength(value, length) {
@@ -51,6 +65,20 @@ export function EmployeeForm(props) {
     return false;
   }
 
+  function validateForm() {
+    if (
+      employeeNameState === "error" ||
+      name === "" ||
+      employeePositionState === "error" ||
+      position === "" ||
+      employeeOrderState === "error" ||
+      order === ""
+    ) {
+      return false;
+    }
+    return true;
+  }
+
   return (
     <Dialog
       open={modal}
@@ -58,7 +86,7 @@ export function EmployeeForm(props) {
       disableBackdropClick={true}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>
           교회 소개 스크린에 표시될 교역자 분들입니다. <br />
@@ -81,6 +109,7 @@ export function EmployeeForm(props) {
               }
               setName(e.target.value);
             },
+            defaultValue: name,
           }}
         />
         <CustomInput
@@ -100,6 +129,7 @@ export function EmployeeForm(props) {
               }
               setPosition(e.target.value);
             },
+            defaultValue: position,
           }}
         />
         <CustomInput
@@ -112,14 +142,15 @@ export function EmployeeForm(props) {
           }}
           inputProps={{
             onChange: (e) => {
-              if (parseFloat(order) >= 0 && isNumber(order)) {
+              setOrder(e.target.value);
+              console.log("Printing order: ", order);
+              if (isNumber(order)) {
                 setEmployeeOrderState("success");
               } else {
                 setEmployeeOrderState("error");
               }
-              setOrder(e.target.value);
             },
-            type: "number",
+            defaultValue: order,
           }}
         />
       </DialogContent>
@@ -128,27 +159,40 @@ export function EmployeeForm(props) {
           취소
         </Button>
         <Button
-          disabled={!validateForm()}
           color="primary"
           onClick={(e) => {
             e.preventDefault();
-            if (create != null) {
-              create({
-                variables: {
-                  name: name,
-                  position: position,
-                  profileImage: null,
-                  churchId: currentUser.church.id,
-                  order: order,
-                },
-              });
-              setModal(false);
-            } else {
-              update({});
+            if (validateForm()) {
+              console.log("validation success");
+              if (create != null) {
+                create({
+                  variables: {
+                    name: name,
+                    position: position,
+                    profileImage: null,
+                    churchId: currentUser.church.id,
+                    order: parseFloat(order),
+                  },
+                });
+                setModal(false);
+              } else {
+                update({
+                  variables: {
+                    id: employee.id,
+                    name: name,
+                    position: position,
+                    churchId: employee.churchId,
+                    order: parseFloat(order),
+                  },
+                });
+                setModal(false);
+              }
             }
+            console.log("validation fail");
+            console.log("Printing order state", employeeOrderState);
           }}
         >
-          등록
+          완료
         </Button>
       </DialogActions>
     </Dialog>

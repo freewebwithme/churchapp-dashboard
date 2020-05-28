@@ -9,9 +9,10 @@ import { getUserFromSession } from "../../helpers/helper.js";
 
 export const ProfileUploadModal = (props) => {
   let currentUser = getUserFromSession();
-  const { title, modal, setModal, employee } = props;
+  const { title, modal, setModal, employee, refetch, setEmployee } = props;
 
   function handleClose() {
+    setEmployee(null);
     setModal(false);
   }
   return (
@@ -26,6 +27,7 @@ export const ProfileUploadModal = (props) => {
           setModal={setModal}
           user={currentUser}
           employee={employee}
+          refetch={refetch}
         />
         <Button color="danger" onClick={handleClose}>
           취소

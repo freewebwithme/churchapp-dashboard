@@ -20,7 +20,7 @@ export const getUserFromSession = () => {
 export const setUserToSession = (user) => {
   sessionStorage.setItem("user", JSON.stringify(user));
 };
-
+// Sort array by order
 export const sortArray = (array) => {
   array.sort((a, b) => a.order - b.order);
   return array;

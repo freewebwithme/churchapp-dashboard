@@ -11,10 +11,11 @@ import defaultAvatar from "assets/img/placeholder.jpg";
 import { useHistory } from "react-router-dom";
 
 export default function AvatarUpload(props) {
-  const { history } = useHistory();
+  const history = useHistory();
   const [file, setFile] = React.useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = React.useState(
-    props.avatar ? defaultAvatar : defaultImage
+    //    props.avatar ? defaultAvatar : defaultImage
+    props.employee.profileImage
   );
   let fileInput = React.createRef();
   const handleImageChange = (e) => {
@@ -45,7 +46,7 @@ export default function AvatarUpload(props) {
       .then((data) => {
         console.log("Printing result of profile upload: ", data);
         props.setModal(false);
-        history.push("/dashboard/employee");
+        props.refetch();
       });
   };
   const handleClick = () => {

@@ -26,8 +26,9 @@ export const SIGN_IN = gql`
             id
             name
             position
-            profile_image
+            profileImage
             order
+            churchId
           }
         }
       }
@@ -67,8 +68,9 @@ export const CREATE_CHURCH = gql`
         id
         name
         position
-        profile_image
+        profileImage
         order
+        churchId
       }
       user {
         email
@@ -106,8 +108,9 @@ export const ME = gql`
           id
           name
           position
-          profile_image
+          profileImage
           order
+          churchId
         }
       }
     }
@@ -155,6 +158,7 @@ export const UPDATE_CHURCH = gql`
         position
         profileImage
         order
+        churchId
       }
     }
   }
@@ -166,7 +170,7 @@ export const CREATE_EMPLOYEE = gql`
     $position: String!
     $profileImage: String
     $churchId: String!
-    $order: String!
+    $order: Integer!
   ) {
     createEmployee(
       name: $name
@@ -191,7 +195,7 @@ export const UPDATE_EMPLOYEE = gql`
     $position: String!
     $profileImage: String
     $churchId: String!
-    $order: String!
+    $order: Integer!
   ) {
     updateEmployee(
       id: $id
@@ -210,14 +214,11 @@ export const UPDATE_EMPLOYEE = gql`
   }
 `;
 
-export const GET_PRESIGNED_URL = gql`
-  mutation($fileExtension: String, $contentType: String, $userId: String) {
-    getPresignedUrl(
-      fileExtension: $fileExtension
-      contentType: $contentType
-      userId: $userId
-    ) {
-      url
+export const DELETE_EMPLOYEE = gql`
+  mutation($id: ID!, $churchId: String!) {
+    deleteEmployee(id: $id, churchId: $churchId) {
+      name
+      position
     }
   }
 `;
@@ -232,6 +233,36 @@ export const UPDATE_SERVICE_INFO = gql`
   }
 `;
 
+export const CREATE_NEWS = gql`
+  mutation($churchId: String!, $content: String!) {
+    createNews(churchId: $churchId, content: $content) {
+      id
+      churchId
+      content
+    }
+  }
+`;
+
+export const UPDATE_NEWS = gql`
+  mutation($id: ID!, $churchId: String!, $content: String!) {
+    updateNews(id: $id, churchId: $churchId, content: $content) {
+      id
+      churchId
+      content
+    }
+  }
+`;
+
+export const DELETE_NEWS = gql`
+  mutation($id: ID!, $churchId: String!) {
+    deleteNews(id: $id, churchId: $churchId) {
+      id
+      churchId
+      content
+    }
+  }
+`;
+
 export const DELETE_SLIDER_IMAGE = gql`
   mutation($userId: String, $sliderNumber: String) {
     deleteSlideImage(userId: $userId, sliderNumber: $sliderNumber) {
@@ -240,6 +271,18 @@ export const DELETE_SLIDER_IMAGE = gql`
       slideImageOne
       slideImageTwo
       slideImageThree
+    }
+  }
+`;
+
+export const GET_PRESIGNED_URL = gql`
+  mutation($fileExtension: String, $contentType: String, $userId: String) {
+    getPresignedUrl(
+      fileExtension: $fileExtension
+      contentType: $contentType
+      userId: $userId
+    ) {
+      url
     }
   }
 `;

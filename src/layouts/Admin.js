@@ -15,9 +15,9 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import { ChurchInfoPage } from "../pages/ChurchInfoPage.js";
 import { EmployeePage } from "../pages/EmployeePage.js";
+import { NewsPage } from "../pages/NewsPage.js";
 import { EditChurchInfoPage } from "../pages/EditChurchInfoPage";
 import { EditServiceInfoPage } from "../pages/EditServiceInfoPage";
-import SlideImagePage from "../pages/SlideImagePage";
 
 import OfferingPage from "../pages/OfferingPage.js";
 
@@ -190,6 +190,7 @@ export default function Dashboard(props) {
                 exact
                 component={EmployeePage}
               />
+              <Route path="/dashboard/news" exact component={NewsPage} />
               <Route
                 path="/dashboard/offering"
                 exact
