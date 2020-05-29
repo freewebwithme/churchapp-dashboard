@@ -30,6 +30,11 @@ export const SIGN_IN = gql`
             order
             churchId
           }
+          news {
+            id
+            content
+            createdAt
+          }
         }
       }
       token
@@ -112,6 +117,11 @@ export const ME = gql`
           order
           churchId
         }
+        news {
+          id
+          content
+          createdAt
+        }
       }
     }
   }
@@ -159,6 +169,11 @@ export const UPDATE_CHURCH = gql`
         profileImage
         order
         churchId
+      }
+      news {
+        id
+        content
+        createdAt
       }
     }
   }
