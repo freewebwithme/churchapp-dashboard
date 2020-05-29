@@ -184,10 +184,7 @@ export const EmployeePage = () => {
     );
   }
 
-  // Sort employees by order
   let employees = currentUser.church.employees;
-  let sortedEmployees = sortArray(employees);
-  console.log("Printing sorted employees: ", sortedEmployees);
 
   const _employeePage = () => {
     if (
@@ -238,7 +235,7 @@ export const EmployeePage = () => {
                 </Button>
               </div>
             </GridItem>
-            {sortedEmployees.map((employee) => {
+            {employees.map((employee) => {
               return (
                 <GridItem key={employee.id} xs={4} sm={4} md={4} lg={3}>
                   <Card profile className={classes.employeeCard}>

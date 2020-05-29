@@ -14,7 +14,8 @@ import Container from "@material-ui/core/Container";
 
 import { useMutation } from "@apollo/react-hooks";
 import { SIGN_IN } from "../queries/Query.js";
-import {setUserToSession} from "../helpers/helper.js";
+import { setUserToSession } from "../helpers/helper.js";
+import Loading from "../pages/components/Loading";
 
 function Copyright() {
   return (
@@ -29,24 +30,24 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 export default function SignIn() {
@@ -68,12 +69,11 @@ export default function SignIn() {
     onError(error) {
       console.log("printing from sign in onError:", error);
       setError(error.message);
-    }
+    },
   });
 
-  if (loading) return <p>Loading....</p>;
+  if (loading) return <Loading />;
 
-  console.log("Printing email: ", email);
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -98,7 +98,7 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -110,7 +110,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <Button
             type="submit"
@@ -119,13 +119,13 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault();
               signIn({
                 variables: {
                   email: email,
-                  password: password
-                }
+                  password: password,
+                },
               });
             }}
           >

@@ -14,7 +14,7 @@ const WS_ENDPOINT = "ws://localhost:4000/socket";
 
 // Create an HTTP link to the Phoenix app's HTTP endpoint URL.
 const httpLink = createHttpLink({
-  uri: HTTP_ENDPOINT
+  uri: HTTP_ENDPOINT,
 });
 
 // Create a WebSocket link to the Phoenix app's socket URL.
@@ -26,13 +26,12 @@ const socketLink = createAbsintheSocketLink(
 // the token in the "Authorization" request header.
 // Returns an object to set the context of the GraphQL request.
 const authLink = setContext((_, { headers }) => {
-  console.log("Printing headers: ", headers);
   const token = sessionStorage.getItem("user-token");
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : ""
-    }
+      authorization: token ? `Bearer ${token}` : "",
+    },
   };
 });
 
@@ -40,7 +39,7 @@ const authLink = setContext((_, { headers }) => {
 // Queries and mutations go through the HTTP link.
 // Subscriptions go through the WebSocket link.
 const link = new ApolloLink.split(
-  operation => hasSubscription(operation.query),
+  (operation) => hasSubscription(operation.query),
   socketLink,
   authLink.concat(httpLink)
 );
@@ -48,7 +47,7 @@ const link = new ApolloLink.split(
 // Create the Apollo Client instance.
 const client = new ApolloClient({
   link: link,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 export default client;

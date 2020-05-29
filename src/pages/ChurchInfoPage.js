@@ -109,8 +109,7 @@ export function ChurchInfoPage() {
 
   // Sort schedules by order
   let schedules = currentUser.church.schedules;
-  let sortedSchedules = sortArray(schedules);
-  console.log("Printing sorted schedules", sortedSchedules);
+  //let sortedSchedules = sortArray(schedules);
   return (
     <GridContainer>
       {user.church ? (
@@ -244,7 +243,7 @@ export function ChurchInfoPage() {
                           </span>
                         ) : (
                           <span>
-                            {sortedSchedules.map((info) => (
+                            {schedules.map((info) => (
                               <li key={info.order.toString()}>
                                 {info.serviceName} - {info.serviceTime}
                               </li>

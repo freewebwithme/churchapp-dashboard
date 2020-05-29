@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "components/CustomButtons/Button.js";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -10,7 +9,6 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import AnnouncementOutlinedIcon from "@material-ui/icons/AnnouncementOutlined";
-import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles((theme) => ({
   announcementIcon: {
@@ -22,24 +20,58 @@ const useStyles = makeStyles((theme) => ({
 }));
 export function NewsModal(props) {
   const classes = useStyles();
-  const { news, setNews, modal, setModal, createNews, updateNews } = props;
+  const {
+    user,
+    news,
+    setNews,
+    modal,
+    setModal,
+    createNews,
+    updateNews,
+  } = props;
 
-  const [content, setContent] = React.useState("");
+  // In case of update news
+  // Need to set saved content to content property
+  function initContent() {
+    // Need to check news if it is null or not
+    // In creating news action, I pass null for news
+    // Because I am creating new News.
+    if (news === null) {
+      return "";
+    } else {
+      return news.content;
+    }
+  }
+  const [content, setContent] = React.useState(initContent());
   const [contentValidationState, setContentValidationState] = React.useState(
     ""
   );
 
   function handleClose() {
     if (setNews != null) {
+      // setNews is passed from NewsPage, when I click delete? or update news
+      // When closing modal, I need to set currentNews to null.
       setNews(null);
     }
     setModal(false);
-    console.log("handle close()");
   }
   function handleSubmit() {
     if (createNews != null) {
+      createNews({
+        variables: {
+          churchId: user.church.id,
+          content: content,
+        },
+      });
     }
     if (updateNews != null) {
+      updateNews({
+        variables: {
+          id: news.id,
+          churchId: user.church.id,
+          content: content,
+        },
+      });
     }
   }
   return (
@@ -78,6 +110,7 @@ export function NewsModal(props) {
                   }
                   setContent(e.target.value);
                 },
+                defaultValue: content,
               }}
             />
           </GridItem>

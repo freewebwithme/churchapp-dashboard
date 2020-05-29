@@ -18,8 +18,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Loading from "./components/Loading";
 import { NewsModal } from "./components/NewsModal";
+import { DeleteNewsModal } from "./components/DeleteNewsModal";
 
-import { getUserFromSession } from "../helpers/helper.js";
+import { getUserFromSession, setUserToSession } from "../helpers/helper.js";
 
 const useStyles = makeStyles((theme) => ({
   cardHeaderText: {
@@ -30,16 +31,43 @@ const useStyles = makeStyles((theme) => ({
 export function NewsPage() {
   const classes = useStyles();
   let currentUser = getUserFromSession();
-  let news = currentUser.church.news;
 
-  const [churchNews, setChurchNews] = React.useState(null);
+  function initNews() {
+    if (
+      currentUser.church.news === null ||
+      currentUser.church.news.length === 0
+    ) {
+      return null;
+    }
+    return currentUser.church.news;
+  }
+  const [currentNews, setCurrentNews] = React.useState(null);
+  const [churchNews, setChurchNews] = React.useState(initNews());
   const [createModal, setCreateModal] = React.useState(false);
   const [updateModal, setUpdateModal] = React.useState(false);
   const [deleteModal, setDeleteModal] = React.useState(false);
 
+  const {
+    loading: loadingMe,
+    error: errorMe,
+    data: dataMe,
+    refetch: refetchMe,
+    networkStatus,
+  } = useQuery(ME, {
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: "cache-and-network",
+    onCompleted(data) {
+      console.log("Printing church info: ", data);
+      setUserToSession(data.me);
+      setChurchNews(data.me.church.news);
+    },
+  });
+
   const [createNews, { loading: createLoading }] = useMutation(CREATE_NEWS, {
     onCompleted(data) {
       console.log("Printing completed on Create news", data);
+      setCreateModal(false);
+      refetchMe();
     },
     onError(error) {
       console.log("Printing error on Create news", error);
@@ -48,6 +76,8 @@ export function NewsPage() {
   const [updateNews, { loading: updateLoading }] = useMutation(UPDATE_NEWS, {
     onCompleted(data) {
       console.log("Printing completed on Update news", data);
+      setUpdateModal(false);
+      refetchMe();
     },
     onError(error) {
       console.log("Printing error on Update news", error);
@@ -56,6 +86,8 @@ export function NewsPage() {
   const [deleteNews, { loading: deleteLoading }] = useMutation(DELETE_NEWS, {
     onCompleted(data) {
       console.log("Printing completed on Delete news", data);
+      setDeleteModal(false);
+      refetchMe();
     },
     onError(error) {
       console.log("Printing error on Delete news", error);
@@ -71,6 +103,7 @@ export function NewsPage() {
         setModal={setCreateModal}
         createNews={createNews}
         updateNews={null}
+        user={currentUser}
       />
     );
   }
@@ -78,24 +111,38 @@ export function NewsPage() {
   function updateNewsModal() {
     return (
       <NewsModal
-        news={churchNews}
-        setNews={setChurchNews}
+        news={currentNews}
+        setNews={setCurrentNews}
         modal={updateModal}
         setModal={setUpdateModal}
         createNews={null}
         updateNews={updateNews}
+        user={currentUser}
       />
     );
   }
 
-  function deleteNewsModal() {}
+  function deleteNewsModal() {
+    return (
+      <DeleteNewsModal
+        news={currentNews}
+        setNews={setCurrentNews}
+        modal={deleteModal}
+        setModal={setDeleteModal}
+        deleteNews={deleteNews}
+        user={currentUser}
+      />
+    );
+  }
 
-  if (createLoading || updateLoading || deleteLoading) {
+  if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
+
+  if (createLoading || updateLoading || deleteLoading || loadingMe) {
     return <Loading />;
   }
 
   function _newsPage() {
-    if (news.length === 0 || news === null) {
+    if (churchNews.length === 0 || churchNews === null) {
       return (
         <Card>
           <CardBody>
@@ -108,7 +155,7 @@ export function NewsPage() {
         </Card>
       );
     } else {
-      return news.map((newsItem) => {
+      return churchNews.map((newsItem) => {
         return (
           <Card key={newsItem.id}>
             <CardBody>
@@ -122,6 +169,7 @@ export function NewsPage() {
                 aria-label="edit"
                 onClick={(e) => {
                   e.preventDefault();
+                  setCurrentNews(newsItem);
                   setUpdateModal(true);
                 }}
               >
@@ -131,6 +179,7 @@ export function NewsPage() {
                 aria-label="delete"
                 onClick={(e) => {
                   e.preventDefault();
+                  setCurrentNews(newsItem);
                   setDeleteModal(true);
                 }}
               >
@@ -193,8 +242,8 @@ export function NewsPage() {
         </GridContainer>
       </div>
       {createNewsModal()}
-      {churchNews && updateNewsModal()}
-      {churchNews && deleteNewsModal()}
+      {currentNews && updateNewsModal()}
+      {currentNews && deleteNewsModal()}
     </>
   );
 }

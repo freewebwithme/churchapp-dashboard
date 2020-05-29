@@ -32,8 +32,6 @@ const useStyles = makeStyles(styles);
 export default function Dashboard(props) {
   const token = sessionStorage.getItem("user-token");
   const user = JSON.parse(sessionStorage.getItem("user"));
-  console.log("printing token: ", token);
-  console.log("printing user: ", user);
 
   const { ...rest } = props;
   // states and functions

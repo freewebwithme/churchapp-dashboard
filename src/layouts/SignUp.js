@@ -72,7 +72,7 @@ export default function SignUp() {
       console.log(data);
       sessionStorage.setItem("user-token", data.signUp.token);
       sessionStorage.setItem("user", JSON.stringify(data.signUp.user));
-      history.push("/dashboard")
+      history.push("/dashboard");
     },
     onError(error) {
       console.log("Printing from sign up onError: ", error.message);
@@ -110,7 +110,6 @@ export default function SignUp() {
                 autoFocus
                 onChange={(e) => {
                   setName(e.target.value);
-                  console.log(e.target.value);
                 }}
               />
             </Grid>
@@ -125,7 +124,6 @@ export default function SignUp() {
                 autoComplete="email"
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  console.log(e.target.value);
                 }}
               />
             </Grid>
@@ -141,7 +139,6 @@ export default function SignUp() {
                 autoComplete="current-password"
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  console.log(e.target.value);
                 }}
               />
             </Grid>
