@@ -12,7 +12,26 @@ const useStyles = makeStyles(styles);
 
 export default function Pagination(props) {
   const classes = useStyles();
-  const { pages, color } = props;
+  const {
+    currentPageNumber,
+    setCurrentPageNumber,
+    color,
+    contentsPerPage,
+    contents,
+  } = props;
+
+  // Pagination props
+  let numPages = Math.ceil(contents.length / contentsPerPage);
+
+  let initPage = 1;
+  let pages = Array(numPages)
+    .fill()
+    .map(() => {
+      let active = initPage === currentPageNumber;
+      let page = { text: initPage++, active: active };
+      return page;
+    });
+
   return (
     <ul className={classes.pagination}>
       {pages.map((prop, key) => {
@@ -29,7 +48,7 @@ export default function Pagination(props) {
               </Button>
             ) : (
               <Button
-                onClick={() => alert("you've clicked " + prop.text)}
+                onClick={() => setCurrentPageNumber(prop.text)}
                 className={paginationLink}
               >
                 {prop.text}
@@ -47,16 +66,7 @@ Pagination.defaultProps = {
 };
 
 Pagination.propTypes = {
-  pages: PropTypes.arrayOf(
-    PropTypes.shape({
-      active: PropTypes.bool,
-      disabled: PropTypes.bool,
-      text: PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.oneOf(["PREV", "NEXT", "...", "이전", "다음"]),
-      ]).isRequired,
-      onClick: PropTypes.func,
-    })
-  ).isRequired,
   color: PropTypes.oneOf(["primary", "info", "success", "warning", "danger"]),
+  recordsPerPage: PropTypes.number,
+  contens: PropTypes.array,
 };

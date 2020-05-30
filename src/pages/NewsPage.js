@@ -47,6 +47,9 @@ export function NewsPage() {
   const [updateModal, setUpdateModal] = React.useState(false);
   const [deleteModal, setDeleteModal] = React.useState(false);
 
+  const [currentPageNumber, setCurrentPageNumber] = React.useState(1);
+  const contentsPerPage = 10;
+
   const {
     loading: loadingMe,
     error: errorMe,
@@ -94,6 +97,12 @@ export function NewsPage() {
     },
   });
 
+  function paginate(array, pageNumber) {
+    return array.slice(
+      (pageNumber - 1) * contentsPerPage,
+      pageNumber * contentsPerPage
+    );
+  }
   function createNewsModal() {
     return (
       <NewsModal
@@ -141,55 +150,56 @@ export function NewsPage() {
     return <Loading />;
   }
 
-  function _newsPage() {
-    if (churchNews.length === 0 || churchNews === null) {
+  function _emptyNewsPage() {
+    return (
+      <Card>
+        <CardBody>
+          <Badge color="primary">뉴스없음 :(</Badge>
+          <br />
+          <br />
+          등록된 교회 소식이 없습니다. 교회 소식을 등록하셔서 성도들에게
+          알리세요.
+        </CardBody>
+      </Card>
+    );
+  }
+
+  function _newsPage(pageNumber) {
+    let paginatedNews = paginate(churchNews, pageNumber);
+    return paginatedNews.map((newsItem) => {
       return (
-        <Card>
+        <Card key={newsItem.id}>
           <CardBody>
-            <Badge color="primary">뉴스없음 :(</Badge>
+            <Badge color="primary">{newsItem.createdAt}</Badge>
             <br />
             <br />
-            등록된 교회 소식이 없습니다. 교회 소식을 등록하셔서 성도들에게
-            알리세요.
+            {newsItem.content}
           </CardBody>
+          <CardActions disableSpacing>
+            <IconButton
+              aria-label="edit"
+              onClick={(e) => {
+                e.preventDefault();
+                setCurrentNews(newsItem);
+                setUpdateModal(true);
+              }}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+            <IconButton
+              aria-label="delete"
+              onClick={(e) => {
+                e.preventDefault();
+                setCurrentNews(newsItem);
+                setDeleteModal(true);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </CardActions>
         </Card>
       );
-    } else {
-      return churchNews.map((newsItem) => {
-        return (
-          <Card key={newsItem.id}>
-            <CardBody>
-              <Badge color="primary">{newsItem.createdAt}</Badge>
-              <br />
-              <br />
-              {newsItem.content}
-            </CardBody>
-            <CardActions disableSpacing>
-              <IconButton
-                aria-label="edit"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentNews(newsItem);
-                  setUpdateModal(true);
-                }}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-              <IconButton
-                aria-label="delete"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setCurrentNews(newsItem);
-                  setDeleteModal(true);
-                }}
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </CardActions>
-          </Card>
-        );
-      });
-    }
+    });
   }
 
   return (
@@ -222,18 +232,18 @@ export function NewsPage() {
                   </Button>
                 </CardText>
               </CardHeader>
-              <CardBody>{_newsPage()}</CardBody>
+              <CardBody>
+                {churchNews.length === 0 || churchNews === null
+                  ? _emptyNewsPage()
+                  : _newsPage(currentPageNumber)}
+              </CardBody>
               <CardFooter>
                 <Paginations
-                  pages={[
-                    { text: "이전" },
-                    { text: 1, active: true },
-                    { text: 2 },
-                    { text: 3 },
-                    { text: 4 },
-                    { text: "다음" },
-                  ]}
+                  contents={churchNews}
+                  contentsPerPage={contentsPerPage}
                   color="primary"
+                  currentPageNumber={currentPageNumber}
+                  setCurrentPageNumber={setCurrentPageNumber}
                 />
               </CardFooter>
             </Card>
