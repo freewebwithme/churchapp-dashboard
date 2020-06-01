@@ -150,6 +150,10 @@ export const ChurchInfoForm = (props) => {
             name: churchName,
             channelId: channelId,
             intro: churchIntro,
+            addressLineOne: churchAddressLineOne,
+            addressLineTwo: churchAddressLineTwo,
+            email: churchEmail,
+            phoneNumber: churchPhonenumber,
             userId: currentUser.id,
           },
         });
@@ -373,7 +377,7 @@ export const ChurchInfoForm = (props) => {
                 disabled={!validateForm()}
                 onClick={() => handleSubmit()}
               >
-                수정완료
+                완료
               </Button>
             </form>
           </CardContent>

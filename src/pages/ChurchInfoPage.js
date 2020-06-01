@@ -63,6 +63,7 @@ export function ChurchInfoPage() {
   const [user, setUser] = React.useState(currentUser);
   const [church, setChurch] = React.useState(currentUser.church);
 
+  console.log("Printing current user: ", currentUser);
   const {
     loading: loadingMe,
     error: errorMe,
@@ -107,9 +108,6 @@ export function ChurchInfoPage() {
   }
   if (loading || loadingMe) return <Loading />;
 
-  // Sort schedules by order
-  let schedules = currentUser.church.schedules;
-  //let sortedSchedules = sortArray(schedules);
   return (
     <GridContainer>
       {user.church ? (
@@ -243,7 +241,7 @@ export function ChurchInfoPage() {
                           </span>
                         ) : (
                           <span>
-                            {schedules.map((info) => (
+                            {church.schedules.map((info) => (
                               <li key={info.order.toString()}>
                                 {info.serviceName} - {info.serviceTime}
                               </li>
@@ -276,6 +274,7 @@ export function ChurchInfoPage() {
           <ChurchInfoForm
             title="교회 정보가 없습니다. 교회 정보를 등록하세요"
             create={createChurch}
+            church={church}
           />
         </GridItem>
       )}

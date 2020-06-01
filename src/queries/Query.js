@@ -48,12 +48,20 @@ export const CREATE_CHURCH = gql`
     $intro: String!
     $channelId: String!
     $userId: String!
+    $addressLineOne: String
+    $addressLineTwo: String
+    $email: String
+    $phoneNumber: String
   ) {
     createChurch(
       name: $name
       intro: $intro
       channelId: $channelId
       userId: $userId
+      addressLineOne: $addressLineOne
+      addressLineTwo: $addressLineTwo
+      email: $email
+      phoneNumber: $phoneNumber
     ) {
       id
       name

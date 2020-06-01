@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { ME, CREATE_NEWS, UPDATE_NEWS, DELETE_NEWS } from "../queries/Query";
 import { makeStyles } from "@material-ui/core/styles";
@@ -33,14 +34,15 @@ export function NewsPage() {
   let currentUser = getUserFromSession();
 
   function initNews() {
-    if (
-      currentUser.church.news === null ||
-      currentUser.church.news.length === 0
-    ) {
+    if (currentUser.church.news === null) {
       return null;
+    }
+    if (currentUser.church.news.length === 0) {
+      return currentUser.church.news;
     }
     return currentUser.church.news;
   }
+  // Need a currentNews for update or delete.
   const [currentNews, setCurrentNews] = React.useState(null);
   const [churchNews, setChurchNews] = React.useState(initNews());
   const [createModal, setCreateModal] = React.useState(false);
@@ -79,6 +81,7 @@ export function NewsPage() {
   const [updateNews, { loading: updateLoading }] = useMutation(UPDATE_NEWS, {
     onCompleted(data) {
       console.log("Printing completed on Update news", data);
+      setCurrentNews(null);
       setUpdateModal(false);
       refetchMe();
     },
@@ -89,6 +92,7 @@ export function NewsPage() {
   const [deleteNews, { loading: deleteLoading }] = useMutation(DELETE_NEWS, {
     onCompleted(data) {
       console.log("Printing completed on Delete news", data);
+      setCurrentNews(null);
       setDeleteModal(false);
       refetchMe();
     },
@@ -117,7 +121,7 @@ export function NewsPage() {
     );
   }
 
-  function updateNewsModal() {
+  function updateNewsModal(currentNews, setCurrentNews) {
     return (
       <NewsModal
         news={currentNews}
@@ -131,7 +135,7 @@ export function NewsPage() {
     );
   }
 
-  function deleteNewsModal() {
+  function deleteNewsModal(currentNews, setCurrentNews) {
     return (
       <DeleteNewsModal
         news={currentNews}
@@ -252,8 +256,8 @@ export function NewsPage() {
         </GridContainer>
       </div>
       {createNewsModal()}
-      {currentNews && updateNewsModal()}
-      {currentNews && deleteNewsModal()}
+      {currentNews && updateNewsModal(currentNews, setCurrentNews)}
+      {currentNews && deleteNewsModal(currentNews, setCurrentNews)}
     </>
   );
 }
