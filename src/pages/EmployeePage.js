@@ -184,13 +184,11 @@ export const EmployeePage = () => {
     );
   }
 
-  let employees = currentUser.church.employees;
+  let employees = church ? currentUser.church.employees : [];
 
+  console.log("Printing employees: ", employees);
   const _employeePage = () => {
-    if (
-      currentUser.church.employees.length === 0 ||
-      currentUser.church.employees === null
-    ) {
+    if (employees.length === 0 || employees === null) {
       return (
         <>
           <GridContainer>

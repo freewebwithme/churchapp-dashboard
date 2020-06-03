@@ -30,6 +30,76 @@ export const SIGN_IN = gql`
             order
             churchId
           }
+          latestVideos {
+            id
+            title
+            description
+            videoId
+            thumbnailUrl
+            publishedAt
+            channelTitle
+          }
+          news {
+            id
+            content
+            createdAt
+          }
+        }
+      }
+      token
+    }
+  }
+`;
+
+export const SIGN_UP = gql`
+  mutation(
+    $email: String!
+    $password: String!
+    $name: String!
+    $recaptchaValue: String!
+  ) {
+    signUp(
+      email: $email
+      password: $password
+      name: $name
+      recaptchaValue: $recaptchaValue
+    ) {
+      user {
+        id
+        name
+        email
+        church {
+          id
+          name
+          intro
+          uuid
+          channelId
+          addressLineOne
+          addressLineTwo
+          phoneNumber
+          email
+          schedules {
+            serviceName
+            serviceTime
+            order
+          }
+          employees {
+            id
+            name
+            position
+            profileImage
+            order
+            churchId
+          }
+          latestVideos {
+            id
+            title
+            description
+            videoId
+            thumbnailUrl
+            publishedAt
+            channelTitle
+          }
           news {
             id
             content
@@ -85,6 +155,15 @@ export const CREATE_CHURCH = gql`
         order
         churchId
       }
+      latestVideos {
+        id
+        title
+        description
+        videoId
+        thumbnailUrl
+        publishedAt
+        channelTitle
+      }
       user {
         email
         name
@@ -129,6 +208,15 @@ export const ME = gql`
           id
           content
           createdAt
+        }
+        latestVideos {
+          id
+          title
+          description
+          videoId
+          thumbnailUrl
+          publishedAt
+          channelTitle
         }
       }
     }
@@ -182,6 +270,15 @@ export const UPDATE_CHURCH = gql`
         id
         content
         createdAt
+      }
+      latestVideos {
+        id
+        title
+        description
+        videoId
+        thumbnailUrl
+        publishedAt
+        channelTitle
       }
     }
   }
@@ -294,6 +391,16 @@ export const DELETE_SLIDER_IMAGE = gql`
       slideImageOne
       slideImageTwo
       slideImageThree
+    }
+  }
+`;
+
+export const REFETCH_VIDEOS = gql`
+  mutation($userId: String!, $churchId: String!) {
+    refetchLatestVideos(userId: $userId, churchId: $churchId) {
+      id
+      title
+      description
     }
   }
 `;

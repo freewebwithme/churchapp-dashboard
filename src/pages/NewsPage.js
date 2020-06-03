@@ -34,8 +34,11 @@ export function NewsPage() {
   let currentUser = getUserFromSession();
 
   function initNews() {
+    if (currentUser.church === null) {
+      return [];
+    }
     if (currentUser.church.news === null) {
-      return null;
+      return [];
     }
     if (currentUser.church.news.length === 0) {
       return currentUser.church.news;
@@ -64,7 +67,7 @@ export function NewsPage() {
     onCompleted(data) {
       console.log("Printing church info: ", data);
       setUserToSession(data.me);
-      setChurchNews(data.me.church.news);
+      setChurchNews(data.me.church ? data.me.church.news : []);
     },
   });
 

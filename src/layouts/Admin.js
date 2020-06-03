@@ -18,6 +18,8 @@ import { EmployeePage } from "../pages/EmployeePage.js";
 import { NewsPage } from "../pages/NewsPage.js";
 import { EditChurchInfoPage } from "../pages/EditChurchInfoPage";
 import { EditServiceInfoPage } from "../pages/EditServiceInfoPage";
+import { LogoutPage } from "../pages/LogoutPage";
+import { LatestVideosPage } from "pages/LatestVideosPage.js";
 
 import OfferingPage from "../pages/OfferingPage.js";
 
@@ -190,10 +192,16 @@ export default function Dashboard(props) {
               />
               <Route path="/dashboard/news" exact component={NewsPage} />
               <Route
+                path="/dashboard/latest-videos"
+                exact
+                component={LatestVideosPage}
+              />
+              <Route
                 path="/dashboard/offering"
                 exact
                 component={OfferingPage}
               />
+              <Route path="/dashboard/log-out" exact component={LogoutPage} />
             </Switch>
           </div>
         </div>

@@ -139,10 +139,7 @@ export const ChurchInfoForm = (props) => {
 
   const currentUser = getUserFromSession();
 
-  console.log("Printing form validate?", validateForm());
-  console.log("printing create function: ", create);
   const handleSubmit = () => {
-    console.log("Printing from handleSubmit: ");
     if (validateForm()) {
       if (create !== undefined) {
         create({
@@ -159,7 +156,6 @@ export const ChurchInfoForm = (props) => {
         });
       }
       if (update !== undefined) {
-        console.log("Printing from update function: ", church);
         update({
           variables: {
             churchId: church.id,
@@ -174,7 +170,6 @@ export const ChurchInfoForm = (props) => {
         });
       }
     } else {
-      console.log("not validated form");
     }
   };
   return (

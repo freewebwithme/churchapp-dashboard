@@ -1,14 +1,16 @@
 import { ChurchInfoPage } from "pages/ChurchInfoPage.js";
 import { EmployeePage } from "pages/EmployeePage.js";
 import { NewsPage } from "pages/NewsPage.js";
+import { LatestVideosPage } from "pages/LatestVideosPage.js";
 import Loading from "pages/components/Loading.js";
 
-// @material-ui/icons
 import {
   ImportContacts,
   AttachMoney,
   Group,
   Announcement,
+  ExitToApp,
+  VideoLibrary,
 } from "@material-ui/icons";
 
 var dashRoutes = [
@@ -34,9 +36,24 @@ var dashRoutes = [
     layout: "/dashboard",
   },
   {
+    path: "/latest-videos",
+    name: "최근 영상",
+    icon: VideoLibrary,
+    component: LatestVideosPage,
+    layout: "/dashboard",
+  },
+  {
     path: "/offering",
     name: "연보",
     icon: AttachMoney,
+    component: Loading,
+    layout: "/dashboard",
+  },
+
+  {
+    path: "/log-out",
+    name: "Log out",
+    icon: ExitToApp,
     component: Loading,
     layout: "/dashboard",
   },

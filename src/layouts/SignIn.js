@@ -14,21 +14,12 @@ import Container from "@material-ui/core/Container";
 
 import { useMutation } from "@apollo/react-hooks";
 import { SIGN_IN } from "../queries/Query.js";
-import { setUserToSession } from "../helpers/helper.js";
+import {
+  setUserToSession,
+  displayErrorMessageForGraphQL,
+  Copyright,
+} from "../helpers/helper.js";
 import Loading from "../pages/components/Loading";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://www.churchapp.dev">
-        Church App
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -68,7 +59,7 @@ export default function SignIn() {
     },
     onError(error) {
       console.log("printing from sign in onError:", error);
-      setError(error.message);
+      setError(displayErrorMessageForGraphQL(error.message));
     },
   });
 

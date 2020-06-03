@@ -11,34 +11,13 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import ReCAPTCHA from "react-google-recaptcha";
 
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
+import { SIGN_UP } from "../queries/Query.js";
 
-const SIGN_UP = gql`
-  mutation($email: String!, $password: String!, $name: String!) {
-    signUp(email: $email, password: $password, name: $name) {
-      token
-      user {
-        email
-        name
-      }
-    }
-  }
-`;
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { displayErrorMessageForGraphQL, Copyright } from "../helpers/helper.js";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -65,6 +44,8 @@ export default function SignUp() {
   const [password, setPassword] = React.useState(null);
   const [name, setName] = React.useState(null);
   const [error, setError] = React.useState(null);
+  const [recaptcha, setRecaptcha] = React.useState(null);
+
   let history = useHistory();
 
   const [signUp, { loading }] = useMutation(SIGN_UP, {
@@ -76,12 +57,22 @@ export default function SignUp() {
     },
     onError(error) {
       console.log("Printing from sign up onError: ", error.message);
-      setError(error.message);
+      setError(displayErrorMessageForGraphQL(error.message));
+      //setError(error.message);
     },
   });
 
   const classes = useStyles();
 
+  const reCaptchaOnChange = (value) => {
+    console.log("ReCaptcha Value: ", value);
+    setRecaptcha(value);
+  };
+
+  const reCaptchaOnError = () => {
+    console.log("Recaptcha error or expired");
+    setRecaptcha(null);
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -142,6 +133,16 @@ export default function SignUp() {
                 }}
               />
             </Grid>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <ReCAPTCHA
+                  sitekey="6LeBr_8UAAAAAMfHP4idaKRVRHy1W-pYLcymozKM"
+                  onChange={reCaptchaOnChange}
+                  onExpired={reCaptchaOnError}
+                  onError={reCaptchaOnError}
+                />
+              </Grid>
+            </Grid>
           </Grid>
           <Button
             type="submit"
@@ -149,7 +150,7 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            disabled={!email || !name || !password}
+            disabled={!email || !name || !password || !recaptcha}
             onClick={(e) => {
               e.preventDefault();
               signUp({
@@ -157,6 +158,7 @@ export default function SignUp() {
                   email: email,
                   password: password,
                   name: name,
+                  recaptchaValue: recaptcha,
                 },
               });
             }}
