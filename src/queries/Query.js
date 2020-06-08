@@ -7,6 +7,7 @@ export const SIGN_IN = gql`
         id
         name
         email
+        admin
         church {
           id
           name
@@ -68,6 +69,7 @@ export const SIGN_UP = gql`
         id
         name
         email
+        admin
         church {
           id
           name
@@ -167,6 +169,7 @@ export const CREATE_CHURCH = gql`
       user {
         email
         name
+        admin
       }
       latestVideos {
         id
@@ -181,6 +184,7 @@ export const ME = gql`
       id
       email
       name
+      admin
       church {
         id
         name

@@ -51,7 +51,6 @@ export default function SignIn() {
   const classes = useStyles();
   const [signIn, { loading }] = useMutation(SIGN_IN, {
     onCompleted(data) {
-      console.log("printing from sign in completed", data.signIn.user);
       sessionStorage.setItem("user-token", data.signIn.token);
       setUserToSession(data.signIn.user);
       let { from } = location.state || { from: { pathname: "/dashboard" } };

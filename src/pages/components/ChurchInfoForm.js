@@ -8,6 +8,7 @@ import Button from "components/CustomButtons/Button.js";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { getUserFromSession } from "../../helpers/helper.js";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -37,6 +38,7 @@ export const ChurchInfoForm = (props) => {
       return church[value];
     }
   };
+  const history = useHistory();
   const classes = useStyles();
   const { title, create, update, church } = props;
 
@@ -367,6 +369,9 @@ export const ChurchInfoForm = (props) => {
                 </GridItem>
               </GridContainer>
 
+              <Button color="danger" onClick={() => history.goBack()}>
+                취소
+              </Button>
               <Button
                 color="rose"
                 disabled={!validateForm()}

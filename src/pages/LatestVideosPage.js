@@ -53,7 +53,9 @@ export function LatestVideosPage() {
       currentUser = getUserFromSession();
       // set user for updating UI
       setUser(currentUser);
-      setLatestVideos(user.church.latestVideos);
+      if (user.church != null) {
+        setLatestVideos(user.church.latestVideos);
+      }
     },
   });
   const [refetchVideos, { loading: loadingVideos }] = useMutation(

@@ -231,6 +231,9 @@ export const EditServiceInfoPage = () => {
               </form>
             </CardContent>
             <CardActions>
+              <Button color="danger" onClick={() => history.goBack()}>
+                취소
+              </Button>
               <Button
                 color="rose"
                 onClick={() => {
@@ -245,7 +248,7 @@ export const EditServiceInfoPage = () => {
                   });
                 }}
               >
-                수정완료
+                완료
               </Button>
             </CardActions>
           </Card>

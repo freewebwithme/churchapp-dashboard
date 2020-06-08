@@ -16,14 +16,20 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import { ChurchInfoPage } from "../pages/ChurchInfoPage.js";
 import { EmployeePage } from "../pages/EmployeePage.js";
 import { NewsPage } from "../pages/NewsPage.js";
+import { MasterAdminPage } from "../pages/admin/MasterAdminPage";
 import { EditChurchInfoPage } from "../pages/EditChurchInfoPage";
 import { EditServiceInfoPage } from "../pages/EditServiceInfoPage";
 import { LogoutPage } from "../pages/LogoutPage";
 import { LatestVideosPage } from "pages/LatestVideosPage.js";
-
 import OfferingPage from "../pages/OfferingPage.js";
 
+import {
+  getUserFromSession,
+  setUserToSession,
+  isAdmin,
+} from "../helpers/helper.js";
 import routes from "routes.js";
+import adminRoutes from "adminRoutes.js";
 
 import styles from "assets/jss/material-dashboard-pro-react/layouts/adminStyle.js";
 
@@ -32,8 +38,8 @@ var ps;
 const useStyles = makeStyles(styles);
 
 export default function Dashboard(props) {
-  const token = sessionStorage.getItem("user-token");
-  const user = JSON.parse(sessionStorage.getItem("user"));
+  let currentUser = getUserFromSession();
+  console.log("Printing user info from dashboard", currentUser);
 
   const { ...rest } = props;
   // states and functions
@@ -146,12 +152,15 @@ export default function Dashboard(props) {
     }
   };
 
+  const adminUser = isAdmin();
+
+  console.log("admin user? ", isAdmin());
   console.log("printing getActiveRoute:", getActiveRoute(routes));
 
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={routes}
+        routes={adminUser ? adminRoutes : routes}
         logoText={"Church App"}
         logo={logo}
         image={image}
@@ -160,7 +169,7 @@ export default function Dashboard(props) {
         color={color}
         bgColor={bgColor}
         miniActive={miniActive}
-        user={user}
+        user={currentUser}
         {...rest}
       />
       <div className={mainPanelClasses} ref={mainPanel}>
@@ -173,50 +182,45 @@ export default function Dashboard(props) {
         />
         <div className={classes.content}>
           <div className={classes.container}>
-            <Switch>
-              <Route path="/dashboard" exact component={ChurchInfoPage} />
-              <Route
-                path="/dashboard/edit-church"
-                exact
-                component={EditChurchInfoPage}
-              />
-              <Route
-                path="/dashboard/edit-service-info"
-                exact
-                component={EditServiceInfoPage}
-              />
-              <Route
-                path="/dashboard/employee"
-                exact
-                component={EmployeePage}
-              />
-              <Route path="/dashboard/news" exact component={NewsPage} />
-              <Route
-                path="/dashboard/latest-videos"
-                exact
-                component={LatestVideosPage}
-              />
-              <Route
-                path="/dashboard/offering"
-                exact
-                component={OfferingPage}
-              />
-              <Route path="/dashboard/log-out" exact component={LogoutPage} />
-            </Switch>
+            {adminUser ? (
+              <Switch>
+                <Route path="/dashboard" exact component={MasterAdminPage} />
+                <Route path="/dashboard/log-out" exact component={LogoutPage} />
+              </Switch>
+            ) : (
+              <Switch>
+                <Route path="/dashboard" exact component={ChurchInfoPage} />
+                <Route
+                  path="/dashboard/edit-church"
+                  exact
+                  component={EditChurchInfoPage}
+                />
+                <Route
+                  path="/dashboard/edit-service-info"
+                  exact
+                  component={EditServiceInfoPage}
+                />
+                <Route
+                  path="/dashboard/employee"
+                  exact
+                  component={EmployeePage}
+                />
+                <Route path="/dashboard/news" exact component={NewsPage} />
+                <Route
+                  path="/dashboard/latest-videos"
+                  exact
+                  component={LatestVideosPage}
+                />
+                <Route
+                  path="/dashboard/offering"
+                  exact
+                  component={OfferingPage}
+                />
+                <Route path="/dashboard/log-out" exact component={LogoutPage} />
+              </Switch>
+            )}
           </div>
         </div>
-        <FixedPlugin
-          handleImageClick={handleImageClick}
-          handleColorClick={handleColorClick}
-          handleBgColorClick={handleBgColorClick}
-          color={color}
-          bgColor={bgColor}
-          bgImage={image}
-          handleFixedClick={handleFixedClick}
-          fixedClasses={fixedClasses}
-          sidebarMinimize={sidebarMinimize.bind(this)}
-          miniActive={miniActive}
-        />
       </div>
     </div>
   );

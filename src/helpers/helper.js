@@ -10,6 +10,11 @@ export const isAuthenticated = () => {
   return userToken ? true : false;
 };
 
+export const isAdmin = () => {
+  const savedUser = getUserFromSession();
+  return savedUser.admin;
+};
+
 export const getUserFromSession = () => {
   const savedUser = sessionStorage.getItem("user");
   if (savedUser) {

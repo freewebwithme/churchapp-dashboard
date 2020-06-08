@@ -2,4 +2,5 @@
 - Implement Signout(done)
 - add capcha at sign up, how can I verify correct captcha?(done)
 
-- Signed in user is sometimes changing, Need to check.
+- Signed in user is sometimes changing, Need to check.(Implement log out from server side)
+- Implement master admin page.
