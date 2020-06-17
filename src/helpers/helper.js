@@ -61,6 +61,18 @@ export const displayErrorMessageForGraphQL = (message) => {
   return errorMessages[1];
 };
 
+export const hasChurch = (user) => {
+  return user.church ? true : false;
+};
+
+export const validateLength = (prop, minLength, maxLength) => {
+  if (prop.length < minLength || prop.length > maxLength) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 export function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -73,3 +85,20 @@ export function Copyright() {
     </Typography>
   );
 }
+
+// This function is used to call default or saved value from object
+// to display in the form
+export const initPropValue = (obj, prop) => {
+  if (obj === null || obj === undefined) {
+    return "";
+  } else if (obj[prop] === null) {
+    return "";
+  } else {
+    return obj[prop];
+  }
+};
+
+export const validateEmail = (email) => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};

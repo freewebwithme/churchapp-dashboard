@@ -25,6 +25,8 @@ import { ChurchInfoForm } from "./components/ChurchInfoForm.js";
 import Loading from "./components/Loading.js";
 import { cardTitle } from "assets/jss/material-dashboard-pro-react.js";
 
+import gql from "graphql-tag";
+
 const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
@@ -69,6 +71,7 @@ export function ChurchInfoPage() {
     error: errorMe,
     data: dataMe,
     refetch: refetchMe,
+    client,
     networkStatus,
   } = useQuery(ME, {
     notifyOnNetworkStatusChange: true,
@@ -111,7 +114,7 @@ export function ChurchInfoPage() {
   return (
     <GridContainer>
       {user.church ? (
-        <GridItem xs={12}>
+        <GridItem xs={12} sm={8} md={8} lg={6}>
           <Card>
             <CardHeader>
               <h4 className={classes.cardTitle}>

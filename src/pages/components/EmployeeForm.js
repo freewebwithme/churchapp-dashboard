@@ -10,7 +10,7 @@ import AvatarUpload from "./AvatarUpload.js";
 import { getUserFromSession, isNumber } from "../../helpers/helper.js";
 
 export function EmployeeForm(props) {
-  let currentUser = getUserFromSession();
+  let currentUser;
   const {
     title,
     modal,
@@ -19,8 +19,14 @@ export function EmployeeForm(props) {
     update,
     employee,
     setEmployee,
+    user,
   } = props;
 
+  if (user === undefined) {
+    currentUser = getUserFromSession();
+  } else {
+    currentUser = user;
+  }
   function initEmployeeState(employee, propName) {
     if (employee != null) {
       return employee[propName];

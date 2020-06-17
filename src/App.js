@@ -12,7 +12,12 @@ import SignIn from "./layouts/SignIn";
 import SignUp from "./layouts/SignUp";
 import Landing from "./layouts/Landing";
 import Dashboard from "./layouts/Admin";
+import AdminDashboard from "./layouts/MasterAdmin";
+
 import { PrivateRoute } from "./protected/PrivateRoute";
+import { AdminRoute } from "./protected/AdminRoute";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
+import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 
 const hist = createBrowserHistory();
 function App() {
@@ -22,6 +27,15 @@ function App() {
         <Route path="/" exact component={Landing} />
         <Route path="/sign-in" exact component={SignIn} />
         <Route path="/sign-up" exact component={SignUp} />
+        <Route path="/forgot-password" exact component={ForgotPasswordPage} />
+        <Route
+          path="/reset-password/:token"
+          exact
+          component={ResetPasswordPage}
+        />
+        <AdminRoute path="/dashboard/admin">
+          <AdminDashboard />
+        </AdminRoute>
         <PrivateRoute path="/dashboard">
           <Dashboard />
         </PrivateRoute>

@@ -2,8 +2,9 @@ import { ChurchInfoPage } from "pages/ChurchInfoPage.js";
 import { EmployeePage } from "pages/EmployeePage.js";
 import { NewsPage } from "pages/NewsPage.js";
 import { LatestVideosPage } from "pages/LatestVideosPage.js";
+import { PushNotificationPage } from "pages/PushNotificationPage.js";
 import Loading from "pages/components/Loading.js";
-
+import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import {
   ImportContacts,
   AttachMoney,
@@ -43,12 +44,19 @@ var dashRoutes = [
     layout: "/dashboard",
   },
   {
-    path: "/offering",
-    name: "연보",
-    icon: AttachMoney,
-    component: Loading,
+    path: "/push-notification",
+    name: "Push Notification",
+    icon: NotificationsActiveIcon,
+    component: PushNotificationPage,
     layout: "/dashboard",
   },
+  //{
+  //  path: "/offering",
+  //  name: "연보",
+  //  icon: AttachMoney,
+  //  component: Loading,
+  //  layout: "/dashboard",
+  //},
 
   {
     path: "/log-out",

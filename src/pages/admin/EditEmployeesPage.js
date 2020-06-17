@@ -1,6 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
@@ -14,20 +12,21 @@ import {
   setUserToSession,
   sortArray,
   hasChurch,
-} from "../helpers/helper.js";
+} from "../../helpers/helper.js";
 import { DeleteForever, Edit } from "@material-ui/icons";
-import { EmployeeForm } from "./components/EmployeeForm.js";
-import { DeleteEmployeeModal } from "./components/DeleteEmployeeModal.js";
-import { ProfileUploadModal } from "./components/ProfileUploadModal.js";
+import { EmployeeForm } from "../components/EmployeeForm.js";
+import { DeleteEmployeeModal } from "../components/DeleteEmployeeModal.js";
+import { ProfileUploadModal } from "../components/ProfileUploadModal.js";
 import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useHistory, useParams } from "react-router-dom";
 import {
-  ME,
+  GET_USER,
   CREATE_EMPLOYEE,
   UPDATE_EMPLOYEE,
   DELETE_EMPLOYEE,
-} from "../queries/Query.js";
+} from "../../queries/Query.js";
 
-import Loading from "./components/Loading";
+import Loading from "../components/Loading";
 
 const useStyles = makeStyles((theme) => ({
   employeeCard: {
@@ -41,12 +40,9 @@ const useStyles = makeStyles((theme) => ({
 const defaultProfileImage =
   "https://churchapp-la.s3-us-west-1.amazonaws.com/default-avatar.jpg";
 
-export const EmployeePage = () => {
-  const history = useHistory();
-  let currentUser = getUserFromSession();
+export const EditEmployeesPage = () => {
   const classes = useStyles();
-  const [user, setUser] = React.useState(currentUser);
-  const [church, setChurch] = React.useState(currentUser.church);
+  const history = useHistory();
   // Need this state for updating information in modal.
   const [currentEmployee, setCurrentEmployee] = React.useState(null);
 
@@ -58,22 +54,22 @@ export const EmployeePage = () => {
   // Modal state for Profile image upload form
   const [avatarModal, setAvatarModal] = React.useState(false);
 
+  let { id } = useParams();
+
+  const redirectUrl = "/dashboard/admin";
   const {
-    loading: meLoading,
-    error: meError,
-    data: meData,
+    loading: userLoading,
+    error: userError,
+    data: userData,
     refetch: refetchMe,
     networkStatus,
-  } = useQuery(ME, {
+  } = useQuery(GET_USER, {
     notifyOnNetworkStatusChange: true,
     fetchPolicy: "cache-and-network",
-    onCompleted(data) {
-      setUserToSession(data.me);
-      currentUser = getUserFromSession();
-
-      setUser(currentUser);
-      setChurch(currentUser.church);
+    variables: {
+      Id: id,
     },
+    onCompleted(data) {},
   });
   const [createEmployee, { loading: createLoading }] = useMutation(
     CREATE_EMPLOYEE,
@@ -125,9 +121,13 @@ export const EmployeePage = () => {
       </GridContainer>
     );
   }
-  if (createLoading || updateLoading || meLoading || deleteLoading) {
+  if (userLoading || createLoading || updateLoading || deleteLoading) {
     return <Loading />;
   }
+
+  // Get fetched User and Church
+  let currentUser = userData.getUser;
+  let church = userData.getUser.church;
 
   function employeeCreateModal() {
     return (
@@ -138,6 +138,7 @@ export const EmployeePage = () => {
         create={createEmployee}
         update={null}
         employee={null}
+        user={currentUser}
       />
     );
   }
@@ -156,6 +157,7 @@ export const EmployeePage = () => {
         update={updateEmployee}
         employee={currentEmployee}
         setEmployee={setCurrentEmployee}
+        user={currentUser}
       />
     );
   }
@@ -169,6 +171,7 @@ export const EmployeePage = () => {
         employee={currentEmployee}
         refetch={refetchMe}
         setEmployee={setCurrentEmployee}
+        user={currentUser}
       />
     );
   }
@@ -201,6 +204,7 @@ export const EmployeePage = () => {
                 <CardHeader>
                   <h5>섬기는 분들</h5>
                 </CardHeader>
+
                 {hasChurch(currentUser) ? (
                   <CardBody>
                     <p>등록된 교역자분들이 없습니다.</p>
@@ -224,7 +228,9 @@ export const EmployeePage = () => {
                       color="primary"
                       onClick={(e) => {
                         e.preventDefault();
-                        history.push("/dashboard");
+                        let link =
+                          "/dashboard/admin/edit-church-info/" + currentUser.id;
+                        history.push(link);
                       }}
                     >
                       교회 등록 하러 가기

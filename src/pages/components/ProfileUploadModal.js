@@ -8,9 +8,22 @@ import AvatarUpload from "./AvatarUpload.js";
 import { getUserFromSession } from "../../helpers/helper.js";
 
 export const ProfileUploadModal = (props) => {
-  let currentUser = getUserFromSession();
-  const { title, modal, setModal, employee, refetch, setEmployee } = props;
+  let currentUser;
+  const {
+    title,
+    modal,
+    setModal,
+    employee,
+    refetch,
+    setEmployee,
+    user,
+  } = props;
 
+  if (user === undefined) {
+    currentUser = getUserFromSession();
+  } else {
+    currentUser = user;
+  }
   function handleClose() {
     setEmployee(null);
     setModal(false);

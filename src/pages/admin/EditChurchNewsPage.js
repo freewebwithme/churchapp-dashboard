@@ -1,8 +1,13 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import { ME, CREATE_NEWS, UPDATE_NEWS, DELETE_NEWS } from "../queries/Query";
+import {
+  GET_USER,
+  CREATE_NEWS,
+  UPDATE_NEWS,
+  DELETE_NEWS,
+} from "../../queries/Query";
 import { makeStyles } from "@material-ui/core/styles";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -13,69 +18,60 @@ import CardText from "components/Card/CardText.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Badge from "components/Badge/Badge.js";
-import Paginations from "./components/Pagination.js";
+import Paginations from "../components/Pagination.js";
 import CardActions from "@material-ui/core/CardActions";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import Loading from "./components/Loading";
-import { NewsModal } from "./components/NewsModal";
-import { DeleteNewsModal } from "./components/DeleteNewsModal";
+import Loading from "../components/Loading";
+import { NewsModal } from "../components/NewsModal";
+import { DeleteNewsModal } from "../components/DeleteNewsModal";
 
 import {
   getUserFromSession,
   setUserToSession,
   hasChurch,
-} from "../helpers/helper.js";
+} from "../../helpers/helper.js";
 
 const useStyles = makeStyles((theme) => ({
   cardHeaderText: {
     color: "white",
   },
 }));
-export function NewsPage() {
+
+export function EditChurchNewsPage() {
   const classes = useStyles();
   const history = useHistory();
+  let { id } = useParams();
 
-  let currentUser = getUserFromSession();
-
-  function initNews() {
-    if (currentUser.church === null) {
-      return [];
-    }
-    if (currentUser.church.news === null) {
-      return [];
-    }
-    if (currentUser.church.news.length === 0) {
-      return currentUser.church.news;
-    }
-    return currentUser.church.news;
-  }
   // Need a currentNews for update or delete.
   const [currentNews, setCurrentNews] = React.useState(null);
-  const [churchNews, setChurchNews] = React.useState(initNews());
+  const [churchNews, setChurchNews] = React.useState([]);
   const [createModal, setCreateModal] = React.useState(false);
   const [updateModal, setUpdateModal] = React.useState(false);
   const [deleteModal, setDeleteModal] = React.useState(false);
 
-  const [currentPageNumber, setCurrentPageNumber] = React.useState(1);
-  const contentsPerPage = 10;
-
+  const redirectUrl = "/dashboard/admin";
   const {
-    loading: loadingMe,
-    error: errorMe,
-    data: dataMe,
+    loading: userLoading,
+    error: userError,
+    data: userData,
     refetch: refetchMe,
     networkStatus,
-  } = useQuery(ME, {
+  } = useQuery(GET_USER, {
     notifyOnNetworkStatusChange: true,
     fetchPolicy: "cache-and-network",
+    variables: {
+      Id: id,
+    },
     onCompleted(data) {
-      console.log("Printing church info: ", data);
-      setUserToSession(data.me);
-      setChurchNews(data.me.church ? data.me.church.news : []);
+      if (data.getUser.church !== null) {
+        setChurchNews(data.getUser.church.news);
+      }
     },
   });
+  const [currentPageNumber, setCurrentPageNumber] = React.useState(1);
+  const contentsPerPage = 10;
 
   const [createNews, { loading: createLoading }] = useMutation(CREATE_NEWS, {
     onCompleted(data) {
@@ -110,6 +106,16 @@ export function NewsPage() {
     },
   });
 
+  if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
+
+  if (createLoading || updateLoading || deleteLoading || userLoading) {
+    return <Loading />;
+  }
+
+  // Set user variable
+  const currentUser = userData.getUser;
+
+  console.log("Has church? ", hasChurch(currentUser));
   function paginate(array, pageNumber) {
     return array.slice(
       (pageNumber - 1) * contentsPerPage,
@@ -156,13 +162,6 @@ export function NewsPage() {
       />
     );
   }
-
-  if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
-
-  if (createLoading || updateLoading || deleteLoading || loadingMe) {
-    return <Loading />;
-  }
-
   function _emptyNewsPage() {
     return (
       <Card>
@@ -259,7 +258,9 @@ export function NewsPage() {
                       color="primary"
                       onClick={(e) => {
                         e.preventDefault();
-                        history.push("/dashboard");
+                        let link =
+                          "/dashboard/admin/edit-church-info/" + currentUser.id;
+                        history.push(link);
                       }}
                     >
                       교회 등록하러 가기

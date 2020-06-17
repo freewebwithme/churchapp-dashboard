@@ -1,6 +1,4 @@
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -41,44 +39,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export const ForgotPasswordPage = () => {
   const [email, setEmail] = React.useState(null);
-  const [password, setPassword] = React.useState(null);
   const [error, setError] = React.useState(null);
-  let history = useHistory();
-  let location = useLocation();
-
   const classes = useStyles();
-  const [signIn, { loading }] = useMutation(SIGN_IN, {
-    onCompleted(data) {
-      sessionStorage.setItem("user-token", data.signIn.token);
-      const user = data.signIn.user;
-      setUserToSession(user);
 
-      let { from } = location.state || { from: { pathname: "/dashboard" } };
-      if (user.admin) {
-        history.replace("/dashboard/admin");
-      } else {
-        history.replace("/dashboard");
-      }
-    },
-    onError(error) {
-      console.log("printing from sign in onError:", error);
-      setError(displayErrorMessageForGraphQL(error.message));
-    },
-  });
-
-  if (loading) return <Loading />;
+  const handleClick = () => {};
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
         <Typography component="h1" variant="h5">
-          로그인
+          패스워드 복구 링크 받기
         </Typography>
         <Typography component="h5" variant="caption" color="error">
           {error}
@@ -91,59 +63,25 @@ export default function SignIn() {
             fullWidth
             id="email"
             label="이메일"
+            helperText="등록된 이메일을 입력하세요"
             name="email"
             autoComplete="email"
             autoFocus
             onChange={(e) => setEmail(e.target.value)}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="패스워드"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
           <Button
             type="submit"
             fullWidth
-            disabled={!email || !password}
+            disabled={!email}
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={(e) => {
-              e.preventDefault();
-              signIn({
-                variables: {
-                  email: email,
-                  password: password,
-                },
-              });
-            }}
+            onClick={handleClick()}
           >
-            접속하기
+            링크 보내기
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="/forgot-password" variant="body2">
-                비밀번호를 잊으셨나요?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/sign-up" variant="body2">
-                {"계정이 없습니까? 가입하러 가기"}
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
-}
+};

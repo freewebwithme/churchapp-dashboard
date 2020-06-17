@@ -1,5 +1,7 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { GET_USER, REFETCH_VIDEOS } from "../../queries/Query";
+import { useHistory, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
@@ -9,76 +11,58 @@ import CardText from "components/Card/CardText.js";
 import CardBody from "components/Card/CardBody.js";
 import Badge from "components/Badge/Badge.js";
 import { makeStyles } from "@material-ui/core/styles";
-import styles from "assets/jss/material-dashboard-pro-react/cardImagesStyles.js";
 import Link from "@material-ui/core/Link";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import { ME, REFETCH_VIDEOS } from "../queries/Query";
-import Loading from "./components/Loading";
-import {
-  getUserFromSession,
-  setUserToSession,
-  hasChurch,
-} from "../helpers/helper.js";
+
+import Loading from "../components/Loading";
+import { hasChurch } from "../../helpers/helper";
+import styles from "assets/jss/material-dashboard-pro-react/cardImagesStyles.js";
 
 const useStyles = makeStyles(styles);
 
-export function LatestVideosPage() {
+export const EditLatestVideosPage = () => {
   const classes = useStyles();
+  let { id } = useParams();
   const history = useHistory();
 
-  let currentUser = getUserFromSession();
-  const initLatestVideos = () => {
-    if (currentUser.church === null) {
-      return [];
-    }
-    if (currentUser.church.latestVideos === null) {
-      return [];
-    }
-    return currentUser.church.latestVideos;
-  };
-  const [user, setUser] = React.useState(null);
-  const [latestVideos, setLatestVideos] = React.useState(initLatestVideos());
-  const [modal, setModal] = React.useState(false);
+  const [latestVideos, setLatestVideos] = React.useState([]);
+
+  const redirectUrl = "/dashboard/admin";
   const {
-    loading: loadingMe,
-    error: errorMe,
-    data: dataMe,
+    loading: userLoading,
+    error: userError,
+    data: userData,
     refetch: refetchMe,
     networkStatus,
-  } = useQuery(ME, {
+  } = useQuery(GET_USER, {
     notifyOnNetworkStatusChange: true,
     fetchPolicy: "cache-and-network",
+    variables: {
+      Id: id,
+    },
     onCompleted(data) {
-      let user = data.me;
-      setUserToSession(user);
-      currentUser = getUserFromSession();
-      // set user for updating UI
-      setUser(currentUser);
-      if (user.church != null) {
-        setLatestVideos(user.church.latestVideos);
+      if (data.getUser.church !== null) {
+        setLatestVideos(data.getUser.church.latestVideos);
       }
     },
   });
-  const [refetchVideos, { loading: loadingVideos }] = useMutation(
+  const [refetchVideos, { loading: videoLoading }] = useMutation(
     REFETCH_VIDEOS,
     {
       onCompleted(data) {
         //  after refresh latest video from youtube
         // call Me Query to fresh current latest video page
+        console.log("Refetch completed");
         refetchMe();
       },
-      onError(error) { },
+      onError(error) {},
     }
   );
 
-  if (loadingMe || loadingVideos) {
+  if (userLoading || videoLoading) {
     return <Loading />;
   }
+
+  let currentUser = userData.getUser;
 
   if (networkStatus === 4) {
     return (
@@ -94,11 +78,10 @@ export function LatestVideosPage() {
   }
 
   const refetchLatestVideos = () => {
-    setModal(false);
     refetchVideos({
       variables: {
-        userId: currentUser.id,
-        churchId: currentUser.church.id,
+        userId: userData.getUser.id,
+        churchId: userData.getUser.church.id,
       },
     });
   };
@@ -114,13 +97,13 @@ export function LatestVideosPage() {
             YouTube에 등록된 설교 영상이 없습니다.
           </CardBody>
         ) : (
-            <CardBody>
-              <Badge color="primary"> 교회 정보 없음</Badge>
-              <br />
-              <br />
+          <CardBody>
+            <Badge color="primary"> 교회 정보 없음</Badge>
+            <br />
+            <br />
             교회 정보가 등록되어 있지 않습니다. 교회 정보부터 등록하세요.
-            </CardBody>
-          )}
+          </CardBody>
+        )}
       </Card>
     );
   };
@@ -146,10 +129,6 @@ export function LatestVideosPage() {
       );
     });
   };
-
-  const handleClose = () => {
-    setModal(false);
-  };
   return (
     <div>
       <GridContainer>
@@ -171,19 +150,23 @@ export function LatestVideosPage() {
                   <Button
                     size="sm"
                     color="danger"
-                    onClick={() => setModal(true)}
+                    onClick={() => refetchLatestVideos()}
                   >
                     영상 다시 불러오기
                   </Button>
                 ) : (
-                    <Button
-                      size="sm"
-                      color="primary"
-                      onClick={() => history.push("/dashboard")}
-                    >
-                      교회 정보 등록 하기
-                    </Button>
-                  )}
+                  <Button
+                    size="sm"
+                    color="primary"
+                    onClick={() => {
+                      let link =
+                        "/dashboard/admin/edit-church-info/" + currentUser.id;
+                      history.push(link);
+                    }}
+                  >
+                    교회 정보 등록 하기
+                  </Button>
+                )}
               </CardText>
             </CardHeader>
             <CardBody>
@@ -196,31 +179,6 @@ export function LatestVideosPage() {
           </Card>
         </GridItem>
       </GridContainer>
-      <Dialog open={modal} onClose={handleClose}>
-        <DialogTitle>{"영상을 다시 불러오시겠습니까?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            [이럴 경우만 불러오세요] <br />
-            <br /> 1. 최근에 업로드한 영상중에 삭제한 영상이 있었을 경우. <br />{" "}
-            2. 영상에 오류가 있어서 삭제한 영상이 있었을 경우.
-            <br />
-            <br />
-            [이런 경우에는 사용하지 마세요] <br />
-            <br /> 1. 방금 영상을 업로드 했을 경우(몇분후 자동으로 데이터가
-            업데이트 됩니다. 다시 로그인하세요). <br />
-            2. 업로드한 영상 Title 이나 Description을 수정했을 경우(자동으로
-            업데이트 됩니다.)
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="danger" autoFocus>
-            취소
-          </Button>
-          <Button onClick={refetchLatestVideos} color="primary">
-            불러오기
-          </Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
-}
+};

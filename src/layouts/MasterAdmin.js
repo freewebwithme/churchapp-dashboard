@@ -16,17 +16,22 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import { ChurchInfoPage } from "../pages/ChurchInfoPage.js";
 import { EmployeePage } from "../pages/EmployeePage.js";
 import { NewsPage } from "../pages/NewsPage.js";
-import { EditChurchInfoPage } from "../pages/EditChurchInfoPage";
-import { ProfilePage } from "../pages/ProfilePage";
-import { EditProfilePage } from "../pages/EditProfilePage";
-import { ChangePasswordPage } from "../pages/ChangePasswordPage";
+import { MasterAdminPage } from "../pages/admin/MasterAdminPage";
+import { EditChurchInfoPage } from "../pages/admin/EditChurchInfoPage";
+import { EditLatestVideosPage } from "../pages/admin/EditLatestVideosPage";
+import { EditEmployeesPage } from "../pages/admin/EditEmployeesPage";
+import { EditChurchNewsPage } from "../pages/admin/EditChurchNewsPage";
 import { EditServiceInfoPage } from "../pages/EditServiceInfoPage";
-import { PushNotificationPage } from "../pages/PushNotificationPage";
 import { LogoutPage } from "../pages/LogoutPage";
 import { LatestVideosPage } from "pages/LatestVideosPage.js";
+import OfferingPage from "../pages/OfferingPage.js";
 
-import { getUserFromSession, setUserToSession } from "../helpers/helper.js";
-import dashRoutes from "routes.js";
+import {
+  getUserFromSession,
+  setUserToSession,
+  isAdmin,
+} from "../helpers/helper.js";
+import adminRoutes from "adminRoutes.js";
 
 import styles from "assets/jss/material-dashboard-pro-react/layouts/adminStyle.js";
 
@@ -34,8 +39,9 @@ var ps;
 
 const useStyles = makeStyles(styles);
 
-export default function Dashboard(props) {
+export default function AdminDashboard(props) {
   let currentUser = getUserFromSession();
+  console.log("Printing user info from dashboard", currentUser);
 
   const { ...rest } = props;
   // states and functions
@@ -83,6 +89,7 @@ export default function Dashboard(props) {
   };
   const getActiveRoute = (routes) => {
     let activeRoute = "Church App";
+    console.log("Master admin calling");
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = getActiveRoute(routes[i].views);
@@ -101,7 +108,7 @@ export default function Dashboard(props) {
   };
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/dashboard") {
+      if (prop.layout === "/dashboard/admin") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -126,8 +133,8 @@ export default function Dashboard(props) {
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={dashRoutes}
-        logoText={"Church App"}
+        routes={adminRoutes}
+        logoText={"Church App Admin"}
         logo={logo}
         image={image}
         handleDrawerToggle={handleDrawerToggle}
@@ -142,50 +149,37 @@ export default function Dashboard(props) {
         <AdminNavbar
           sidebarMinimize={sidebarMinimize.bind(this)}
           miniActive={miniActive}
-          brandText={getActiveRoute(dashRoutes)}
+          brandText={getActiveRoute(adminRoutes)}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
         />
         <div className={classes.content}>
           <div className={classes.container}>
             <Switch>
-              <Route path="/dashboard" exact component={ChurchInfoPage} />
               <Route
-                path="/dashboard/edit-church"
+                path="/dashboard/admin"
+                exact
+                component={MasterAdminPage}
+              />
+              <Route
+                path="/dashboard/admin/edit-church-info/:id"
                 exact
                 component={EditChurchInfoPage}
               />
               <Route
-                path="/dashboard/edit-service-info"
+                path="/dashboard/admin/edit-latest-videos/:id"
                 exact
-                component={EditServiceInfoPage}
+                component={EditLatestVideosPage}
               />
               <Route
-                path="/dashboard/employee"
+                path="/dashboard/admin/edit-employees/:id"
                 exact
-                component={EmployeePage}
-              />
-              <Route path="/dashboard/news" exact component={NewsPage} />
-              <Route
-                path="/dashboard/latest-videos"
-                exact
-                component={LatestVideosPage}
+                component={EditEmployeesPage}
               />
               <Route
-                path="/dashboard/push-notification"
+                path="/dashboard/admin/edit-church-news/:id"
                 exact
-                component={PushNotificationPage}
-              />
-              <Route path="/dashboard/profile" exact component={ProfilePage} />
-              <Route
-                path="/dashboard/edit-profile"
-                exact
-                component={EditProfilePage}
-              />
-              <Route
-                path="/dashboard/change-password"
-                exact
-                component={ChangePasswordPage}
+                component={EditChurchNewsPage}
               />
               <Route path="/dashboard/log-out" exact component={LogoutPage} />
             </Switch>

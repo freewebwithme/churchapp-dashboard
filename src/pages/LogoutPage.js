@@ -1,26 +1,25 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
+import { useApolloClient } from "@apollo/react-hooks";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "components/CustomButtons/Button.js";
 import { removeUserFromSession } from "../helpers/helper.js";
 
 export function LogoutPage() {
+  const client = useApolloClient();
   const [modal, setModal] = React.useState(true);
   let history = useHistory();
 
   const handleClose = () => {
     setModal(false);
-    history.push("/dashboard");
+    history.goBack();
   };
 
   const handleLogout = () => {
     removeUserFromSession();
+    client.resetStore();
     history.push("/");
   };
 

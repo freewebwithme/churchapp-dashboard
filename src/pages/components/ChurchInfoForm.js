@@ -7,7 +7,11 @@ import GridItem from "components/Grid/GridItem.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import { getUserFromSession } from "../../helpers/helper.js";
+import {
+  getUserFromSession,
+  validateLength,
+  initPropValue,
+} from "../../helpers/helper.js";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,41 +33,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export const ChurchInfoForm = (props) => {
-  const returnDefaultValue = (church, value) => {
-    if (church === null) {
-      return "";
-    } else if (church[value] === null) {
-      return "";
-    } else {
-      return church[value];
-    }
-  };
   const history = useHistory();
   const classes = useStyles();
   const { title, create, update, church } = props;
 
   const [churchName, setChurchName] = React.useState(
-    returnDefaultValue(church, "name")
+    initPropValue(church, "name")
   );
   const [channelId, setChannelId] = React.useState(
-    returnDefaultValue(church, "channelId")
+    initPropValue(church, "channelId")
   );
   const [churchIntro, setChurchIntro] = React.useState(
-    returnDefaultValue(church, "intro")
+    initPropValue(church, "intro")
   );
 
   const [churchAddressLineOne, setChurchAddressLineOne] = React.useState(
-    returnDefaultValue(church, "addressLineOne")
+    initPropValue(church, "addressLineOne")
   );
   const [churchAddressLineTwo, setChurchAddressLineTwo] = React.useState(
-    returnDefaultValue(church, "addressLineTwo")
+    initPropValue(church, "addressLineTwo")
   );
 
   const [churchEmail, setChurchEmail] = React.useState(
-    returnDefaultValue(church, "email")
+    initPropValue(church, "email")
   );
+
+  const [churchWebsite, setChurchWebsite] = React.useState(
+    initPropValue(church, "website")
+  );
+
   const [churchPhonenumber, setChurchPhonenumber] = React.useState(
-    returnDefaultValue(church, "phoneNumber")
+    initPropValue(church, "phoneNumber")
   );
 
   const [
@@ -95,14 +95,6 @@ export const ChurchInfoForm = (props) => {
   const [churchPhonenumberState, setChurchPhonenumberState] = React.useState(
     ""
   );
-
-  const validateLength = (prop, minLength, maxLength) => {
-    if (prop.length < minLength || prop.length > maxLength) {
-      return false;
-    } else {
-      return true;
-    }
-  };
 
   const validateForm = () => {
     if (
@@ -152,6 +144,7 @@ export const ChurchInfoForm = (props) => {
             addressLineOne: churchAddressLineOne,
             addressLineTwo: churchAddressLineTwo,
             email: churchEmail,
+            website: churchWebsite,
             phoneNumber: churchPhonenumber,
             userId: currentUser.id,
           },
@@ -167,6 +160,7 @@ export const ChurchInfoForm = (props) => {
             addressLineOne: churchAddressLineOne,
             addressLineTwo: churchAddressLineTwo,
             email: churchEmail,
+            website: churchWebsite,
             phoneNumber: churchPhonenumber,
           },
         });
@@ -339,6 +333,24 @@ export const ChurchInfoForm = (props) => {
                         setChurchEmail(e.target.value);
                       },
                       defaultValue: church ? church.email : "",
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CustomInput
+                    labelText="교회 Website"
+                    helperText="ex) www.mychurch.com"
+                    className={classes.textField}
+                    formControlProps={{
+                      style: {
+                        width: "50ch",
+                      },
+                    }}
+                    inputProps={{
+                      onChange: (e) => {
+                        setChurchWebsite(e.target.value);
+                      },
+                      defaultValue: church ? church.website : "",
                     }}
                   />
                 </GridItem>
