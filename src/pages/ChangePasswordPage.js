@@ -10,9 +10,7 @@ import Button from "components/CustomButtons/Button.js";
 import {
   getUserFromSession,
   validateLength,
-  initPropValue,
-  validateEmail,
-  isNumber,
+  isPasswordMatch,
 } from "../helpers/helper";
 import { useMutation } from "@apollo/react-hooks";
 import { CHANGE_PASSWORD } from "queries/Query";
@@ -67,7 +65,7 @@ export const ChangePasswordPage = () => {
   const [
     newPasswordConfirmValidateState,
     setNewPasswordConfirmValidateState,
-  ] = React.useState("erro");
+  ] = React.useState("error");
 
   const [changePassword, { loadingChangePassword }] = useMutation(
     CHANGE_PASSWORD,
@@ -81,13 +79,6 @@ export const ChangePasswordPage = () => {
       },
     }
   );
-  const isPasswordMatch = (oldPassword, newPassword) => {
-    if (oldPassword !== newPassword) {
-      return false;
-    }
-    return true;
-  };
-
   const validateForm = () => {
     if (
       currentPassword === "" ||

@@ -7,12 +7,7 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardHeader from "components/Card/CardHeader.js";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "components/CustomButtons/Button.js";
-import {
-  getUserFromSession,
-  setUserToSession,
-  sortArray,
-  hasChurch,
-} from "../../helpers/helper.js";
+import { hasChurch } from "../../helpers/helper.js";
 import { DeleteForever, Edit } from "@material-ui/icons";
 import { EmployeeForm } from "../components/EmployeeForm.js";
 import { DeleteEmployeeModal } from "../components/DeleteEmployeeModal.js";
@@ -20,11 +15,11 @@ import { ProfileUploadModal } from "../components/ProfileUploadModal.js";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { useHistory, useParams } from "react-router-dom";
 import {
-  GET_USER,
   CREATE_EMPLOYEE,
   UPDATE_EMPLOYEE,
   DELETE_EMPLOYEE,
 } from "../../queries/Query.js";
+import { GET_USER } from "../../queries/AdminQuery";
 
 import Loading from "../components/Loading";
 

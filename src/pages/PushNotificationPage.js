@@ -1,8 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -95,7 +95,9 @@ export const PushNotificationPage = () => {
     },
     onError(error) {
       console.log("Error", error);
-      setSnackbarMessage("메세지를 보내는데 실패했습니다.  잠시후 다시 시도하세요.");
+      setSnackbarMessage(
+        "메세지를 보내는데 실패했습니다.  잠시후 다시 시도하세요."
+      );
       setSnackbarStatus("error");
       setSnackbarOpen(true);
     },
@@ -106,7 +108,7 @@ export const PushNotificationPage = () => {
       return;
     }
     setSnackbarOpen(false);
-  }
+  };
 
   const validateForm = () => {
     if (
@@ -127,7 +129,9 @@ export const PushNotificationPage = () => {
       <Grid container>
         <Grid item xs={6}>
           <p>교회 정보가 등록되어 있지 않습니다. 교회 정보부터 등록하세요</p>
-          <Button color="primary" onClick={() => history.push("/dashboard")}>교회 정보 등록</Button>
+          <Button color="primary" onClick={() => history.push("/dashboard")}>
+            교회 정보 등록
+          </Button>
         </Grid>
       </Grid>
     );
@@ -189,22 +193,35 @@ export const PushNotificationPage = () => {
                 <br />
                 <br />
                 <div>
-                  <Button
-                    color="primary"
-                    disabled={!validateForm()}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      sendPush({
-                        variables: {
-                          churchId: currentUser.church.id,
-                          title: title,
-                          message: message,
-                        },
-                      });
-                    }}
-                  >
-                    메세지 보내기
-                  </Button>
+                  {currentUser.church.hasKey ? (
+                    <Button
+                      color="primary"
+                      disabled={!validateForm()}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        sendPush({
+                          variables: {
+                            churchId: currentUser.church.id,
+                            title: title,
+                            message: message,
+                          },
+                        });
+                      }}
+                    >
+                      메세지 보내기
+                    </Button>
+                  ) : (
+                    <div>
+                      <p>데모앱 사용자나 앱 사용자만 이용할 수 있습니다.</p>
+                      <Button
+                        color="primary"
+                        size="sm"
+                        onClick={() => history.push("/dashboard/app-request")}
+                      >
+                        앱 신청하러 가기
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -248,7 +265,11 @@ export const PushNotificationPage = () => {
             </div>
           </Grid>
         </Grid>
-        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleClose}>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
           <Alert onClose={handleClose} severity={snackbarStatus}>
             {snackbarMessage}
           </Alert>

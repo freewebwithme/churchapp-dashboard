@@ -19,6 +19,7 @@ import {
   getUserFromSession,
   setUserToSession,
   sortArray,
+  displayErrorMessageForGraphQL,
 } from "../helpers/helper.js";
 import { CREATE_CHURCH, ME } from "../queries/Query.js";
 import { ChurchInfoForm } from "./components/ChurchInfoForm.js";
@@ -64,6 +65,7 @@ export function ChurchInfoPage() {
   const history = useHistory();
   const [user, setUser] = React.useState(currentUser);
   const [church, setChurch] = React.useState(currentUser.church);
+  const [errorMessage, setErrorMessage] = React.useState(null);
 
   console.log("Printing current user: ", currentUser);
   const {
@@ -94,6 +96,14 @@ export function ChurchInfoPage() {
     },
     onError(error) {
       console.log("Printing from onError: ", error);
+      let message = displayErrorMessageForGraphQL(error.message);
+      if (message.indexOf("taken") !== -1) {
+        setErrorMessage(
+          "이미 등록된 채널입니다. 채널정보를 사용할 수 없습니다"
+        );
+      } else {
+        setErrorMessage(message);
+      }
     },
   });
 
@@ -111,6 +121,7 @@ export function ChurchInfoPage() {
   }
   if (loading || loadingMe) return <Loading />;
 
+  console.log("Printing errorMessage", errorMessage);
   return (
     <GridContainer>
       {user.church ? (
@@ -120,6 +131,7 @@ export function ChurchInfoPage() {
               <h4 className={classes.cardTitle}>
                 교회 정보 <small> - 앱에 표시되는 기본 정보입니다</small>
               </h4>
+              <p>{errorMessage}</p>
             </CardHeader>
             <CardBody>
               <NavPills

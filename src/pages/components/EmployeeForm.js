@@ -148,13 +148,12 @@ export function EmployeeForm(props) {
           }}
           inputProps={{
             onChange: (e) => {
-              setOrder(e.target.value);
-              console.log("Printing order: ", order);
-              if (isNumber(order)) {
+              if (isNumber(e.target.value)) {
                 setEmployeeOrderState("success");
               } else {
                 setEmployeeOrderState("error");
               }
+              setOrder(e.target.value);
             },
             defaultValue: order,
           }}

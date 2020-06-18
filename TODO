@@ -1,9 +1,16 @@
 [TODO]
 - Implement Signout(done)
 - add capcha at sign up, how can I verify correct captcha?(done)
+- When updating church info before Admin put keys info, error occured
+  because of No api key for google. Need to Fix!(DONE)
+- Test for notification page in case of no church.(DONE) 
+- Add "Demo user or Paid User only" message in Latest videos and push notification page(DONE)
 
 
 - Implement master admin page for notification.
-- Test for notification page in case of no church.(DONE) 
 - Reset password
-- Request demo
+- Request demo page
+- Contact to Admin Page
+- Add validate length in Sign up page
+- Change home page content
+- Make Logo

@@ -20,6 +20,7 @@ export const SIGN_IN = gql`
           phoneNumber
           email
           website
+          hasKey
           schedules {
             serviceName
             serviceTime
@@ -84,6 +85,7 @@ export const SIGN_UP = gql`
           phoneNumber
           email
           website
+          hasKey
           schedules {
             serviceName
             serviceTime
@@ -131,6 +133,23 @@ export const CHANGE_PASSWORD = gql`
     }
   }
 `;
+export const RESET_PASSWORD = gql`
+  mutation(
+    $emailFromToken: String!
+    $emailFromInput: String!
+    $newPassword: String!
+  ) {
+    resetPassword(
+      emailFromToken: $emailFromToken
+      emailFromInput: $emailFromInput
+      newPassword: $newPassword
+    ) {
+      name
+      email
+      phoneNumber
+    }
+  }
+`;
 
 export const CREATE_CHURCH = gql`
   mutation(
@@ -164,6 +183,8 @@ export const CREATE_CHURCH = gql`
       addressLineTwo
       phoneNumber
       email
+      website
+      hasKey
       schedules {
         serviceName
         serviceTime
@@ -218,6 +239,7 @@ export const ME = gql`
         phoneNumber
         email
         website
+        hasKey
         schedules {
           serviceName
           serviceTime
@@ -302,6 +324,8 @@ export const UPDATE_CHURCH = gql`
       addressLineTwo
       phoneNumber
       email
+      website
+      hasKey
       schedules {
         serviceName
         serviceTime
@@ -442,103 +466,30 @@ export const REFETCH_VIDEOS = gql`
   }
 `;
 
-export const LIST_ALL_USERS = gql`
-  {
-    listUsers {
-      id
-      email
-      phoneNumber
-      name
-      admin
-    }
-  }
-`;
-
-export const GET_USER = gql`
-  query($Id: String!) {
-    getUser(Id: $Id) {
-      id
-      email
-      name
-      phoneNumber
-      admin
-      church {
-        id
-        name
-        intro
-        uuid
-        channelId
-        addressLineOne
-        addressLineTwo
-        phoneNumber
-        email
-        website
-
-        googleApiKey
-        stripeSecretKey
-        stripePublishableKey
-        onesignalAppId
-        onesignalApiKey
-        schedules {
-          serviceName
-          serviceTime
-          order
-        }
-        employees {
-          id
-          name
-          position
-          profileImage
-          order
-          churchId
-        }
-        news {
-          id
-          content
-          createdAt
-        }
-        latestVideos {
-          id
-          title
-          description
-          videoId
-          thumbnailUrl
-          publishedAt
-          channelTitle
-        }
-      }
-    }
-  }
-`;
-
-export const UPDATE_KEY_INFO = gql`
-  mutation(
-    $churchId: String!
-    $googleApiKey: String!
-    $stripeSecretKey: String!
-    $stripePublishableKey: String!
-    $onesignalAppId: String!
-    $onesignalApiKey: String!
-  ) {
-    updateKeyInfo(
-      churchId: $churchId
-      googleApiKey: $googleApiKey
-      stripeSecretKey: $stripeSecretKey
-      stripePublishableKey: $stripePublishableKey
-      onesignalAppId: $onesignalAppId
-      onesignalApiKey: $onesignalApiKey
-    ) {
-      name
-      intro
-    }
-  }
-`;
-
 export const SEND_PUSH = gql`
   mutation($churchId: String, $title: String, $message: String) {
     sendPush(churchId: $churchId, title: $title, message: $message) {
       id
       recipients
+    }
+  }
+`;
+
+export const FORGOT_PASSWORD_START = gql`
+  mutation($email: String, $recaptchaValue: String) {
+    passwordResetStart(email: $email, recaptchaValue: $recaptchaValue) {
+      recipient
+      message
+    }
+  }
+`;
+
+export const VERIFY_TOKEN = gql`
+  query($token: String!) {
+    verifyToken(token: $token) {
+      email
+      success
+      message
     }
   }
 `;

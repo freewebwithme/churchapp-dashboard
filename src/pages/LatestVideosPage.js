@@ -72,7 +72,7 @@ export function LatestVideosPage() {
         // call Me Query to fresh current latest video page
         refetchMe();
       },
-      onError(error) { },
+      onError(error) {},
     }
   );
 
@@ -104,25 +104,53 @@ export function LatestVideosPage() {
   };
 
   const _emptyLatestVideos = () => {
-    return (
-      <Card>
-        {hasChurch(currentUser) ? (
-          <CardBody>
-            <Badge color="primary"> 동영상 없음</Badge>
-            <br />
-            <br />
-            YouTube에 등록된 설교 영상이 없습니다.
-          </CardBody>
-        ) : (
+    if (hasChurch(currentUser)) {
+      if (!currentUser.church.hasKey) {
+        return (
+          <Card>
             <CardBody>
-              <Badge color="primary"> 교회 정보 없음</Badge>
+              <Badge color="primary">관리자에게 연락하기</Badge>
               <br />
               <br />
-            교회 정보가 등록되어 있지 않습니다. 교회 정보부터 등록하세요.
+              데모앱이나 앱 사용자만 사용할 수 있습니다. 데모앱이나 앱을
+              신청하세요.
+              <div>
+                <Button
+                  color="primary"
+                  onClick={() => history.push("/dashboard/app-request")}
+                  size="sm"
+                >
+                  앱 신청 페이지 가기
+                </Button>
+              </div>
             </CardBody>
-          )}
-      </Card>
-    );
+          </Card>
+        );
+      } else {
+        return (
+          <Card>
+            <CardBody>
+              <Badge color="primary"> 동영상 없음</Badge>
+              <br />
+              <br />
+              YouTube에 등록된 설교 영상이 없거나 불러오지 않았습니다. 한번도
+              영상을 불러온 적이 없는 경우 영상 불러오기 버튼을 눌러주세요.
+            </CardBody>
+          </Card>
+        );
+      }
+    } else {
+      return (
+        <Card>
+          <CardBody>
+            <Badge color="primary"> 교회 정보 없음</Badge>
+            <br />
+            <br />
+            교회 정보가 등록되어 있지 않습니다. 교회 정보부터 등록하세요.
+          </CardBody>
+        </Card>
+      );
+    }
   };
 
   const _displayLatestVideos = (latestVideos) => {
@@ -169,21 +197,22 @@ export function LatestVideosPage() {
                 <br />
                 {hasChurch(currentUser) ? (
                   <Button
+                    disabled={!currentUser.church.hasKey}
                     size="sm"
                     color="danger"
                     onClick={() => setModal(true)}
                   >
-                    영상 다시 불러오기
+                    영상 불러오기
                   </Button>
                 ) : (
-                    <Button
-                      size="sm"
-                      color="primary"
-                      onClick={() => history.push("/dashboard")}
-                    >
-                      교회 정보 등록 하기
-                    </Button>
-                  )}
+                  <Button
+                    size="sm"
+                    color="primary"
+                    onClick={() => history.push("/dashboard")}
+                  >
+                    교회 정보 등록 하기
+                  </Button>
+                )}
               </CardText>
             </CardHeader>
             <CardBody>
@@ -196,6 +225,7 @@ export function LatestVideosPage() {
           </Card>
         </GridItem>
       </GridContainer>
+
       <Dialog open={modal} onClose={handleClose}>
         <DialogTitle>{"영상을 다시 불러오시겠습니까?"}</DialogTitle>
         <DialogContent>

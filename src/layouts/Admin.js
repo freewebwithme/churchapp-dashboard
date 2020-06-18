@@ -13,17 +13,19 @@ import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
-import { ChurchInfoPage } from "../pages/ChurchInfoPage.js";
-import { EmployeePage } from "../pages/EmployeePage.js";
-import { NewsPage } from "../pages/NewsPage.js";
-import { EditChurchInfoPage } from "../pages/EditChurchInfoPage";
-import { ProfilePage } from "../pages/ProfilePage";
-import { EditProfilePage } from "../pages/EditProfilePage";
-import { ChangePasswordPage } from "../pages/ChangePasswordPage";
-import { EditServiceInfoPage } from "../pages/EditServiceInfoPage";
-import { PushNotificationPage } from "../pages/PushNotificationPage";
-import { LogoutPage } from "../pages/LogoutPage";
+import { ChurchInfoPage } from "pages/ChurchInfoPage.js";
+import { EmployeePage } from "pages/EmployeePage.js";
+import { NewsPage } from "pages/NewsPage.js";
+import { EditChurchInfoPage } from "pages/EditChurchInfoPage";
+import { ProfilePage } from "pages/ProfilePage";
+import { EditProfilePage } from "pages/EditProfilePage";
+import { ChangePasswordPage } from "pages/ChangePasswordPage";
+import { EditServiceInfoPage } from "pages/EditServiceInfoPage";
+import { PushNotificationPage } from "pages/PushNotificationPage";
+import { LogoutPage } from "pages/LogoutPage";
 import { LatestVideosPage } from "pages/LatestVideosPage.js";
+import { AppRequestPage } from "pages/AppRequestPage";
+import { ContactPage } from "pages/ContactPage";
 
 import { getUserFromSession, setUserToSession } from "../helpers/helper.js";
 import dashRoutes from "routes.js";
@@ -187,6 +189,12 @@ export default function Dashboard(props) {
                 exact
                 component={ChangePasswordPage}
               />
+              <Route
+                path="/dashboard/app-request"
+                exact
+                component={AppRequestPage}
+              />
+              <Route path="/dashboard/contact" exact component={ContactPage} />
               <Route path="/dashboard/log-out" exact component={LogoutPage} />
             </Switch>
           </div>

@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, Link } from "react-router-dom";
 
 import { useQuery } from "@apollo/react-hooks";
-import { LIST_ALL_USERS } from "../../queries/Query";
+import { LIST_ALL_USERS } from "../../queries/AdminQuery";
 import Loading from "../components/Loading.js";
 
 import GridContainer from "components/Grid/GridContainer.js";

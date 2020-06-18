@@ -1,17 +1,14 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
+import ReCAPTCHA from "react-google-recaptcha";
+
 import { useMutation } from "@apollo/react-hooks";
-import { SIGN_IN } from "../queries/Query.js";
+import { FORGOT_PASSWORD_START } from "../queries/Query.js";
 import {
   setUserToSession,
   displayErrorMessageForGraphQL,
@@ -41,10 +38,46 @@ const useStyles = makeStyles((theme) => ({
 
 export const ForgotPasswordPage = () => {
   const [email, setEmail] = React.useState(null);
-  const [error, setError] = React.useState(null);
+  const [message, setMessage] = React.useState(null);
+  const [recaptcha, setRecaptcha] = React.useState(null);
+
   const classes = useStyles();
 
-  const handleClick = () => {};
+  const [forgotPasswordStart, { loading }] = useMutation(
+    FORGOT_PASSWORD_START,
+    {
+      onCompleted(data) {
+        // sent email
+        console.log(data);
+        setEmail(null);
+        setRecaptcha(null);
+        setMessage(data.passwordResetStart.message);
+      },
+      onError(error) {
+        // Error
+        setMessage(error.message);
+      },
+    }
+  );
+
+  const reCaptchaOnChange = (value) => {
+    setRecaptcha(value);
+  };
+
+  const reCaptchaOnError = () => {
+    setRecaptcha(null);
+  };
+  const handleClick = (e) => {
+    e.preventDefault();
+    forgotPasswordStart({
+      variables: {
+        email: email,
+        recaptchaValue: recaptcha,
+      },
+    });
+  };
+
+  if (loading) return <Loading />;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -52,8 +85,10 @@ export const ForgotPasswordPage = () => {
         <Typography component="h1" variant="h5">
           패스워드 복구 링크 받기
         </Typography>
+        <br />
+        <br />
         <Typography component="h5" variant="caption" color="error">
-          {error}
+          {message}
         </Typography>
         <form className={classes.form} validate="true">
           <TextField
@@ -67,16 +102,24 @@ export const ForgotPasswordPage = () => {
             name="email"
             autoComplete="email"
             autoFocus
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
+          <ReCAPTCHA
+            sitekey="6LeBr_8UAAAAAMfHP4idaKRVRHy1W-pYLcymozKM"
+            onChange={reCaptchaOnChange}
+            onExpired={reCaptchaOnError}
+            onError={reCaptchaOnError}
           />
           <Button
             type="submit"
             fullWidth
-            disabled={!email}
+            disabled={!email || !recaptcha}
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleClick()}
+            onClick={(e) => handleClick(e)}
           >
             링크 보내기
           </Button>

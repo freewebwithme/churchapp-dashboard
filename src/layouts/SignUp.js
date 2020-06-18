@@ -13,11 +13,17 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import ReCAPTCHA from "react-google-recaptcha";
 
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { SIGN_UP } from "../queries/Query.js";
 
-import { displayErrorMessageForGraphQL, Copyright } from "../helpers/helper.js";
+import {
+  displayErrorMessageForGraphQL,
+  Copyright,
+  validateEmail,
+  validateLength,
+  isPasswordMatch,
+} from "../helpers/helper.js";
+import Loading from "pages/components/Loading.js";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,12 +46,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+  const [name, setName] = React.useState(null);
   const [email, setEmail] = React.useState(null);
   const [password, setPassword] = React.useState(null);
-  const [name, setName] = React.useState(null);
+  const [passwordConfirm, setPasswordConfirm] = React.useState(null);
+
   const [error, setError] = React.useState(null);
   const [recaptcha, setRecaptcha] = React.useState(null);
 
+  const [emailValidateState, setEmailValidateState] = React.useState("");
+  const [passwordValidateState, setPasswordValidateState] = React.useState("");
+  const [
+    passwordConfirmValidateState,
+    setPasswordConfirmValidateState,
+  ] = React.useState("");
+
+  const [passwordMatchMessage, setPasswordMatchMessage] = React.useState(
+    "패스워드가 일치하지 않습니다"
+  );
   let history = useHistory();
 
   const [signUp, { loading }] = useMutation(SIGN_UP, {
@@ -65,14 +83,30 @@ export default function SignUp() {
   const classes = useStyles();
 
   const reCaptchaOnChange = (value) => {
-    console.log("ReCaptcha Value: ", value);
     setRecaptcha(value);
   };
 
   const reCaptchaOnError = () => {
-    console.log("Recaptcha error or expired");
     setRecaptcha(null);
   };
+
+  const validateForm = () => {
+    if (!name || !email || !password || !passwordConfirm || !recaptcha) {
+      // props are null
+      return false;
+    }
+    if (
+      emailValidateState === "error" ||
+      passwordValidateState === "error" ||
+      passwordConfirmValidateState === "error"
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  if (loading) return <Loading />;
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -106,6 +140,7 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={emailValidateState === "error"}
                 variant="outlined"
                 required
                 fullWidth
@@ -114,12 +149,18 @@ export default function SignUp() {
                 name="email"
                 autoComplete="email"
                 onChange={(e) => {
+                  if (validateEmail(e.target.value)) {
+                    setEmailValidateState("success");
+                  } else {
+                    setEmailValidateState("error");
+                  }
                   setEmail(e.target.value);
                 }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={passwordValidateState === "error"}
                 variant="outlined"
                 required
                 fullWidth
@@ -129,7 +170,40 @@ export default function SignUp() {
                 id="password"
                 autoComplete="current-password"
                 onChange={(e) => {
+                  if (validateLength(e.target.value, 6, 20)) {
+                    setPasswordValidateState("success");
+                  } else {
+                    setPasswordValidateState("error");
+                  }
                   setPassword(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                error={passwordConfirmValidateState === "error"}
+                variant="outlined"
+                required
+                fullWidth
+                name="password-confirm"
+                label="비밀번호 확인"
+                helperText={passwordMatchMessage}
+                type="password"
+                id="password-confirm"
+                autoComplete="current-password"
+                onChange={(e) => {
+                  if (validateLength(e.target.value, 6, 20)) {
+                    setPasswordConfirmValidateState("success");
+                  }
+                  if (e.target.value !== password) {
+                    setPasswordConfirmValidateState("error");
+                  }
+                  if (isPasswordMatch(e.target.value, password)) {
+                    setPasswordMatchMessage("패스워드가 일치합니다");
+                  } else {
+                    setPasswordMatchMessage("패스워드가 일치하지 않습니다");
+                  }
+                  setPasswordConfirm(e.target.value);
                 }}
               />
             </Grid>
@@ -150,7 +224,7 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            disabled={!email || !name || !password || !recaptcha}
+            disabled={!validateForm()}
             onClick={(e) => {
               e.preventDefault();
               signUp({

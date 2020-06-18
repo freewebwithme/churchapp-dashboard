@@ -1,5 +1,6 @@
 import React from "react";
-import { GET_USER, REFETCH_VIDEOS } from "../../queries/Query";
+import { REFETCH_VIDEOS } from "../../queries/Query";
+import { GET_USER } from "../../queries/AdminQuery";
 import { useHistory, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import GridContainer from "components/Grid/GridContainer.js";

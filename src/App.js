@@ -27,7 +27,7 @@ function App() {
         <Route path="/" exact component={Landing} />
         <Route path="/sign-in" exact component={SignIn} />
         <Route path="/sign-up" exact component={SignUp} />
-        <Route path="/forgot-password" exact component={ForgotPasswordPage} />
+        <Route path="/forgot-password/" exact component={ForgotPasswordPage} />
         <Route
           path="/reset-password/:token"
           exact

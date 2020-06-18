@@ -41,11 +41,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 export default function SignIn() {
   const [email, setEmail] = React.useState(null);
   const [password, setPassword] = React.useState(null);
   const [error, setError] = React.useState(null);
   let history = useHistory();
+  let query = useQuery(); // when password reset complete, it will forward to this page with reset=true
+  let reset = query.get("reset");
   let location = useLocation();
 
   const classes = useStyles();
@@ -80,6 +86,12 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           로그인
         </Typography>
+        <br />
+        {reset === "true" ? (
+          <Typography component="h1" variant="h6">
+            패스워드가 리셋됐습니다. 새로운 패스워드로 로그인 하세요.
+          </Typography>
+        ) : null}
         <Typography component="h5" variant="caption" color="error">
           {error}
         </Typography>

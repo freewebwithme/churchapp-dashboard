@@ -2,12 +2,8 @@ import React from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import {
-  GET_USER,
-  CREATE_NEWS,
-  UPDATE_NEWS,
-  DELETE_NEWS,
-} from "../../queries/Query";
+import { CREATE_NEWS, UPDATE_NEWS, DELETE_NEWS } from "../../queries/Query";
+import { GET_USER } from "../../queries/AdminQuery";
 import { makeStyles } from "@material-ui/core/styles";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";

@@ -3,8 +3,12 @@ import { EmployeePage } from "pages/EmployeePage.js";
 import { NewsPage } from "pages/NewsPage.js";
 import { LatestVideosPage } from "pages/LatestVideosPage.js";
 import { PushNotificationPage } from "pages/PushNotificationPage.js";
+import { AppRequestPage } from "pages/AppRequestPage";
+import { ContactPage } from "pages/ContactPage";
 import Loading from "pages/components/Loading.js";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import EmailIcon from "@material-ui/icons/Email";
 import {
   ImportContacts,
   AttachMoney,
@@ -48,6 +52,20 @@ var dashRoutes = [
     name: "Push Notification",
     icon: NotificationsActiveIcon,
     component: PushNotificationPage,
+    layout: "/dashboard",
+  },
+  {
+    path: "/app-request",
+    name: "앱 신청하기",
+    icon: GetAppIcon,
+    component: AppRequestPage,
+    layout: "/dashboard",
+  },
+  {
+    path: "/contact",
+    name: "관리자에게 연락하기",
+    icon: EmailIcon,
+    component: ContactPage,
     layout: "/dashboard",
   },
   //{

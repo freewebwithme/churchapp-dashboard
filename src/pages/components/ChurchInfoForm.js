@@ -10,6 +10,8 @@ import CardContent from "@material-ui/core/CardContent";
 import {
   getUserFromSession,
   validateLength,
+  isNumber,
+  validateEmail,
   initPropValue,
 } from "../../helpers/helper.js";
 import { useHistory } from "react-router-dom";
@@ -99,19 +101,12 @@ export const ChurchInfoForm = (props) => {
   const validateForm = () => {
     if (
       churchNameValidationState === "error" ||
-      churchNameValidationState === "" ||
       channelIdValidationState === "error" ||
-      channelIdValidationState === "" ||
       churchIntroValidationState === "error" ||
-      churchIntroValidationState === "" ||
       churchAddressLineOneState === "error" ||
-      churchAddressLineOneState === "" ||
       churchAddressLineTwoState === "error" ||
-      churchAddressLineTwoState === "" ||
       churchEmailState === "error" ||
-      churchEmailState === "" ||
-      churchPhonenumberState === "error" ||
-      churchPhonenumberState === ""
+      churchPhonenumberState === "error"
     ) {
       if (
         churchName === "" ||
@@ -189,7 +184,7 @@ export const ChurchInfoForm = (props) => {
                     }}
                     inputProps={{
                       onChange: (e) => {
-                        if (validateLength(churchName, 4, 16)) {
+                        if (validateLength(e.target.value, 4, 16)) {
                           setChurchNameValidationState("success");
                         } else {
                           setChurchNameValidationState("error");
@@ -217,7 +212,7 @@ export const ChurchInfoForm = (props) => {
                     }}
                     inputProps={{
                       onChange: (e) => {
-                        if (validateLength(channelId, 10, 30)) {
+                        if (validateLength(e.target.value, 10, 30)) {
                           setChannelIdValidationState("success");
                         } else {
                           setChannelIdValidationState("error");
@@ -245,7 +240,7 @@ export const ChurchInfoForm = (props) => {
                     }}
                     inputProps={{
                       onChange: (e) => {
-                        if (validateLength(churchIntro, 9, 249)) {
+                        if (validateLength(e.target.value, 9, 249)) {
                           setChurchIntroValidationState("success");
                         } else {
                           setChurchIntroValidationState("error");
@@ -275,7 +270,7 @@ export const ChurchInfoForm = (props) => {
                     }}
                     inputProps={{
                       onChange: (e) => {
-                        if (validateLength(churchAddressLineOne, 3, 50)) {
+                        if (validateLength(e.target.value, 3, 50)) {
                           setChurchAddressLineOneState("success");
                         } else {
                           setChurchAddressLineOneState("error");
@@ -300,7 +295,7 @@ export const ChurchInfoForm = (props) => {
                     }}
                     inputProps={{
                       onChange: (e) => {
-                        if (validateLength(churchAddressLineTwo, 3, 50)) {
+                        if (validateLength(e.target.value, 3, 50)) {
                           setChurchAddressLineTwoState("success");
                         } else {
                           setChurchAddressLineTwoState("error");
@@ -325,7 +320,12 @@ export const ChurchInfoForm = (props) => {
                     }}
                     inputProps={{
                       onChange: (e) => {
-                        if (validateLength(churchEmail, 5, 20)) {
+                        if (validateLength(e.target.value, 5, 40)) {
+                          setChurchEmailState("success");
+                        } else {
+                          setChurchEmailState("error");
+                        }
+                        if (validateEmail(e.target.value)) {
                           setChurchEmailState("success");
                         } else {
                           setChurchEmailState("error");
@@ -368,7 +368,12 @@ export const ChurchInfoForm = (props) => {
                     }}
                     inputProps={{
                       onChange: (e) => {
-                        if (validateLength(churchPhonenumber, 5, 15)) {
+                        if (validateLength(e.target.value, 5, 15)) {
+                          setChurchPhonenumberState("success");
+                        } else {
+                          setChurchPhonenumberState("error");
+                        }
+                        if (isNumber(e.target.value)) {
                           setChurchPhonenumberState("success");
                         } else {
                           setChurchPhonenumberState("error");

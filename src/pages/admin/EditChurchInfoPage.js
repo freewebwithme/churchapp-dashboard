@@ -4,12 +4,11 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { useHistory, useParams } from "react-router-dom";
 import { getUserFromSession, setUserToSession } from "../../helpers/helper.js";
 import {
-  GET_USER,
   UPDATE_SERVICE_INFO,
   CREATE_CHURCH,
   UPDATE_CHURCH,
-  UPDATE_KEY_INFO,
 } from "../../queries/Query.js";
+import { GET_USER, UPDATE_KEY_INFO } from "../../queries/AdminQuery";
 import { ChurchInfoForm } from "../components/ChurchInfoForm";
 import { ServiceInfoForm } from "../components/ServiceInfoForm";
 import { KeyInfoForm } from "../components/KeyInfoForm";
