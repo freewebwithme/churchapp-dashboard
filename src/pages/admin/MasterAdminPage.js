@@ -9,6 +9,7 @@ import Loading from "../components/Loading.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Table from "components/Table/Table.js";
+import TableCell from "@material-ui/core/TableCell";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -30,6 +31,7 @@ export function MasterAdminPage(props) {
     return <Loading />;
   }
 
+  console.log("Printing users: ", data.listUsers);
   // Build each row for user list.
   function userRows(users) {
     const rows = users.map((user) => {
@@ -43,6 +45,9 @@ export function MasterAdminPage(props) {
         user.id,
         user.name,
         user.email,
+        user.church ? user.church.name : "no church",
+        user.church ? user.church.hasKey.toString() : "no church",
+        user.church ? user.church.active.toString() : "no church",
         <Link to={infoLink}>Info</Link>,
         <Link to={videosLink}>Videos</Link>,
         <Link to={employeesLink}>Employees</Link>,
@@ -65,7 +70,14 @@ export function MasterAdminPage(props) {
           </CardHeader>
           <CardBody>
             <Table
-              tableHead={["id", "name", "email"]}
+              tableHead={[
+                "Id",
+                "Name",
+                "Email",
+                "Church name",
+                "Has key?",
+                "Active?",
+              ]}
               tableData={userRows(data.listUsers)}
               customCellClasses={[classes.center, classes.right, classes.right]}
               customClassesForCells={[0, 4, 5]}

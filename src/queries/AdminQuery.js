@@ -8,6 +8,11 @@ export const LIST_ALL_USERS = gql`
       phoneNumber
       name
       admin
+      church {
+        name
+        hasKey
+        active
+      }
     }
   }
 `;
@@ -33,6 +38,7 @@ export const GET_USER = gql`
         email
         website
         hasKey
+        active
 
         googleApiKey
         stripeSecretKey
@@ -91,6 +97,15 @@ export const UPDATE_KEY_INFO = gql`
     ) {
       name
       intro
+    }
+  }
+`;
+
+export const CHANGE_ACTIVE_STATE = gql`
+  mutation($churchId: String, $active: Boolean) {
+    changeActiveState(churchId: $churchId, active: $active) {
+      success
+      message
     }
   }
 `;

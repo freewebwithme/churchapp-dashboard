@@ -254,7 +254,7 @@ export const ResetPasswordPage = () => {
                     color="danger"
                     onClick={(e) => {
                       e.preventDefault();
-                      history.goBack();
+                      history.push("/forgot-password");
                     }}
                   >
                     취소
@@ -272,14 +272,14 @@ export const ResetPasswordPage = () => {
                 </div>
               </CardContent>
             </Card>
+            {changeError !== null ? (
+              <Grid item xs={6}>
+                <div>
+                  <p>{changeError}</p>
+                </div>
+              </Grid>
+            ) : null}
           </Grid>
-          {changeError ?? (
-            <Grid item xs={6}>
-              <div>
-                <p>{changeError}</p>
-              </div>
-            </Grid>
-          )}
           <Grid item md={4}></Grid>
         </Grid>
       </div>

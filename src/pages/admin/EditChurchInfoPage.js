@@ -12,6 +12,7 @@ import { GET_USER, UPDATE_KEY_INFO } from "../../queries/AdminQuery";
 import { ChurchInfoForm } from "../components/ChurchInfoForm";
 import { ServiceInfoForm } from "../components/ServiceInfoForm";
 import { KeyInfoForm } from "../components/KeyInfoForm";
+import { ActivateSwitch } from "../components/ActivateSwitch";
 import Loading from "../components/Loading";
 
 import GridContainer from "components/Grid/GridContainer.js";
@@ -124,6 +125,11 @@ export const EditChurchInfoPage = () => {
     }
   );
 
+  // Change Church Active State callback
+  const changeActiveState = () => {
+    // call server function
+  };
+
   if (networkStatus === 4) return <p>새로운 정보를 불러오는 중입니다...</p>;
   if (
     userLoading ||
@@ -187,6 +193,17 @@ export const EditChurchInfoPage = () => {
                       user={userData.getUser}
                       updateKeyInfo={updateKeyInfo}
                     />
+                  ) : (
+                    <p>
+                      교회 정보가 등록되어 있지 않습니다. 교회 정보부터 먼저
+                      등록하세요.
+                    </p>
+                  ),
+                },
+                {
+                  tabButton: "Activate / Deactivate",
+                  tabContent: userData.getUser.church ? (
+                    <ActivateSwitch user={userData.getUser} />
                   ) : (
                     <p>
                       교회 정보가 등록되어 있지 않습니다. 교회 정보부터 먼저

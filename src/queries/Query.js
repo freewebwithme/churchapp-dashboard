@@ -21,6 +21,7 @@ export const SIGN_IN = gql`
           email
           website
           hasKey
+          active
           schedules {
             serviceName
             serviceTime
@@ -86,6 +87,7 @@ export const SIGN_UP = gql`
           email
           website
           hasKey
+          active
           schedules {
             serviceName
             serviceTime
@@ -185,6 +187,7 @@ export const CREATE_CHURCH = gql`
       email
       website
       hasKey
+      active
       schedules {
         serviceName
         serviceTime
@@ -240,6 +243,7 @@ export const ME = gql`
         email
         website
         hasKey
+        active
         schedules {
           serviceName
           serviceTime
@@ -326,6 +330,7 @@ export const UPDATE_CHURCH = gql`
       email
       website
       hasKey
+      active
       schedules {
         serviceName
         serviceTime
@@ -488,6 +493,43 @@ export const VERIFY_TOKEN = gql`
   query($token: String!) {
     verifyToken(token: $token) {
       email
+      success
+      message
+    }
+  }
+`;
+
+export const APP_REQUEST = gql`
+  mutation(
+    $appType: String
+    $name: String
+    $email: String
+    $phoneNumber: String
+    $churchName: String
+    $message: String
+  ) {
+    appRequest(
+      appType: $appType
+      name: $name
+      email: $email
+      phoneNumber: $phoneNumber
+      churchName: $churchName
+      message: $message
+    ) {
+      success
+      message
+    }
+  }
+`;
+
+export const CONTACT_ADMIN = gql`
+  mutation($category: String, $name: String, $email: String, $message: String) {
+    contactAdmin(
+      category: $category
+      name: $name
+      email: $email
+      message: $message
+    ) {
       success
       message
     }
