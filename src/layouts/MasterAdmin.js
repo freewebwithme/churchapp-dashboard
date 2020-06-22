@@ -21,7 +21,7 @@ import { EditChurchInfoPage } from "../pages/admin/EditChurchInfoPage";
 import { EditLatestVideosPage } from "../pages/admin/EditLatestVideosPage";
 import { EditEmployeesPage } from "../pages/admin/EditEmployeesPage";
 import { EditChurchNewsPage } from "../pages/admin/EditChurchNewsPage";
-import { EditServiceInfoPage } from "../pages/EditServiceInfoPage";
+import { EditPushNotificationPage } from "../pages/admin/EditPushNotificationPage";
 import { LogoutPage } from "../pages/LogoutPage";
 import { LatestVideosPage } from "pages/LatestVideosPage.js";
 import OfferingPage from "../pages/OfferingPage.js";
@@ -52,7 +52,9 @@ export default function AdminDashboard(props) {
   const [bgColor, setBgColor] = React.useState("black");
   // const [hasImage, setHasImage] = React.useState(true);
   const [fixedClasses, setFixedClasses] = React.useState("dropdown");
-  const [logo, setLogo] = React.useState(require("assets/img/logo-white.svg"));
+  const [logo, setLogo] = React.useState(
+    require("assets/img/churchapp-logo-small.png")
+  );
   // styles
   const classes = useStyles();
   const mainPanelClasses =
@@ -180,6 +182,11 @@ export default function AdminDashboard(props) {
                 path="/dashboard/admin/edit-church-news/:id"
                 exact
                 component={EditChurchNewsPage}
+              />
+              <Route
+                path="/dashboard/admin/edit-push-notification/:id"
+                exact
+                component={EditPushNotificationPage}
               />
               <Route path="/dashboard/log-out" exact component={LogoutPage} />
             </Switch>

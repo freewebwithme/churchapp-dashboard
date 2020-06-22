@@ -48,7 +48,9 @@ export default function Dashboard(props) {
   const [bgColor, setBgColor] = React.useState("black");
   // const [hasImage, setHasImage] = React.useState(true);
   const [fixedClasses, setFixedClasses] = React.useState("dropdown");
-  const [logo, setLogo] = React.useState(require("assets/img/logo-white.svg"));
+  const [logo, setLogo] = React.useState(
+    require("assets/img/churchapp-logo-small.png")
+  );
   // styles
   const classes = useStyles();
   const mainPanelClasses =

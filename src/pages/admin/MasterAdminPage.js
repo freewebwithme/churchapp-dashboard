@@ -40,7 +40,7 @@ export function MasterAdminPage(props) {
       let videosLink = "admin/edit-latest-videos/" + user.id;
       let employeesLink = "admin/edit-employees/" + user.id;
       let newsLink = "admin/edit-church-news/" + user.id;
-      let notificationsLink = "admin/edit-church-info/" + user.id;
+      let notificationsLink = "admin/edit-push-notification/" + user.id;
       return [
         user.id,
         user.name,

@@ -535,3 +535,22 @@ export const CONTACT_ADMIN = gql`
     }
   }
 `;
+
+export const SEND_EMAIL = gql`
+  mutation(
+    $name: String
+    $email: String
+    $message: String
+    $recaptchaValue: String
+  ) {
+    sendEmail(
+      name: $name
+      email: $email
+      message: $message
+      recaptchaValue: $recaptchaValue
+    ) {
+      success
+      message
+    }
+  }
+`;
