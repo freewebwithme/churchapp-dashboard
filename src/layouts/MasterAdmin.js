@@ -53,7 +53,7 @@ export default function AdminDashboard(props) {
   // const [hasImage, setHasImage] = React.useState(true);
   const [fixedClasses, setFixedClasses] = React.useState("dropdown");
   const [logo, setLogo] = React.useState(
-    require("assets/img/churchapp-logo-small.png")
+    require("assets/img/churchapp-logo-only-w35.png")
   );
   // styles
   const classes = useStyles();

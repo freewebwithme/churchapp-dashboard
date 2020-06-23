@@ -1,6 +1,7 @@
 import React from "react";
 // nodejs library that concatenates classes
 import classnames from "classnames";
+import { useHistory } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -17,11 +18,15 @@ import {
   Container,
   Row,
   Col,
+  FormFeedback,
 } from "reactstrap";
 
 import { useMutation } from "@apollo/react-hooks";
 import { SEND_EMAIL } from "../queries/Query";
-import { displayErrorMessageForGraphQL } from "../helpers/helper";
+import {
+  displayErrorMessageForGraphQL,
+  validateEmail,
+} from "../helpers/helper";
 
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -31,12 +36,15 @@ import LandingNavbar from "components/Navbars/LandingNavbar.js";
 const Landing = () => {
   const [nameFocused, setNameFocused] = React.useState(false);
   const [emailFocused, setEmailFocused] = React.useState(false);
-  const [name, setName] = React.useState(null);
-  const [email, setEmail] = React.useState(null);
-  const [message, setMessage] = React.useState(null);
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [message, setMessage] = React.useState("");
   const [reCaptcha, setReCaptcha] = React.useState(null);
 
+  const history = useHistory();
+
   const [resultMessage, setResultMessage] = React.useState(null);
+  const recaptchaRef = React.createRef();
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -61,7 +69,8 @@ const Landing = () => {
     setReCaptcha(null);
   }
 
-  function handleClick() {
+  function handleClick(e) {
+    e.preventDefault();
     if (validateForm()) {
       sendEmail({
         variables: {
@@ -71,11 +80,31 @@ const Landing = () => {
           recaptchaValue: reCaptcha,
         },
       });
+      setName("");
+      setEmail("");
+      setMessage("");
+      setReCaptcha(null);
+      recaptchaRef.current.reset();
     }
   }
 
+  function setInvalidEmailField(email) {
+    if (email === "") {
+      return false;
+    }
+    if (validateEmail(email)) {
+      return false;
+    }
+    return true;
+  }
+
   function validateForm() {
-    if (!name || !email || !message || !reCaptcha) {
+    if (
+      name === "" ||
+      email === "" ||
+      message === "" ||
+      !validateEmail(email)
+    ) {
       return false;
     }
     return true;
@@ -495,86 +524,95 @@ const Landing = () => {
                       데모앱을 원하시거나 질문이 있으시면 메세지를 보내주세요.
                     </p>
                     <p className="mt-0 text-danger">{resultMessage}</p>
-                    <FormGroup
-                      className={classnames("mt-5", {
-                        focused: nameFocused,
-                      })}
-                    >
-                      <InputGroup className="input-group-alternative">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="ni ni-circle-08" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          placeholder="이름"
-                          type="text"
-                          onFocus={(e) => setNameFocused(true)}
-                          onBlur={(e) => setNameFocused(false)}
-                          onChange={(e) => {
-                            setName(e.target.value);
-                          }}
-                        />
-                      </InputGroup>
-                    </FormGroup>
-                    <FormGroup
-                      className={classnames({
-                        focused: emailFocused,
-                      })}
-                    >
-                      <InputGroup className="input-group-alternative">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="ni ni-email-83" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          placeholder="이메일 주소"
-                          type="email"
-                          onFocus={(e) => setEmailFocused(true)}
-                          onBlur={(e) => setEmailFocused(false)}
-                          onChange={(e) => {
-                            setEmail(e.target.value);
-                          }}
-                        />
-                      </InputGroup>
-                    </FormGroup>
-                    <FormGroup className="mb-4">
-                      <Input
-                        className="form-control-alternative"
-                        cols="80"
-                        name="name"
-                        placeholder="메세지를 입력하세요..."
-                        rows="4"
-                        type="textarea"
-                        onChange={(e) => {
-                          setMessage(e.target.value);
-                        }}
-                      />
-                    </FormGroup>
-                    <div>
-                      <ReCAPTCHA
-                        sitekey="6LeBr_8UAAAAAMfHP4idaKRVRHy1W-pYLcymozKM"
-                        onChange={reCaptchaOnChange}
-                        onExpired={reCaptchaOnError}
-                        onError={reCaptchaOnError}
-                      />
-                    </div>
-                    <br />
-                    <br />
-                    <div>
-                      <Button
-                        block
-                        className="btn-round"
-                        color="default"
-                        size="lg"
-                        type="button"
-                        disabled={!validateForm()}
-                        onClick={() => handleClick()}
+                    <form>
+                      <FormGroup
+                        className={classnames("mt-5", {
+                          focused: nameFocused,
+                        })}
                       >
-                        메세지 보내기
-                      </Button>
-                    </div>
+                        <InputGroup className="input-group-alternative">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="ni ni-circle-08" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            placeholder="이름"
+                            type="text"
+                            value={name}
+                            onFocus={(e) => setNameFocused(true)}
+                            onBlur={(e) => setNameFocused(false)}
+                            onChange={(e) => {
+                              setName(e.target.value);
+                            }}
+                          />
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup
+                        className={classnames({
+                          focused: emailFocused,
+                        })}
+                      >
+                        <InputGroup className="input-group-alternative">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="ni ni-email-83" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            placeholder="이메일 주소"
+                            type="email"
+                            invalid={setInvalidEmailField(email)}
+                            value={email}
+                            onFocus={(e) => setEmailFocused(true)}
+                            onBlur={(e) => setEmailFocused(false)}
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                            }}
+                          />
+                          <FormFeedback>
+                            올바른 이메일 형식을 입력하세요
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup className="mb-4">
+                        <Input
+                          className="form-control-alternative"
+                          cols="80"
+                          value={message}
+                          placeholder="메세지를 입력하세요..."
+                          rows="4"
+                          type="textarea"
+                          onChange={(e) => {
+                            setMessage(e.target.value);
+                          }}
+                        />
+                      </FormGroup>
+                      <div>
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          sitekey="6LeBr_8UAAAAAMfHP4idaKRVRHy1W-pYLcymozKM"
+                          onChange={reCaptchaOnChange}
+                          onExpired={reCaptchaOnError}
+                          onError={reCaptchaOnError}
+                        />
+                      </div>
+                      <br />
+                      <br />
+                      <div>
+                        <Button
+                          block
+                          className="btn-round"
+                          color="default"
+                          size="lg"
+                          type="submit"
+                          disabled={!validateForm()}
+                          onClick={(e) => handleClick(e)}
+                        >
+                          메세지 보내기
+                        </Button>
+                      </div>
+                    </form>
                   </CardBody>
                 </Card>
               </Col>

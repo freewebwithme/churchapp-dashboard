@@ -19,7 +19,7 @@ import {
   Container,
   Row,
   Col,
-  UncontrolledTooltip
+  UncontrolledTooltip,
 } from "reactstrap";
 
 class DemoNavbar extends React.Component {
@@ -30,18 +30,18 @@ class DemoNavbar extends React.Component {
   }
   state = {
     collapseClasses: "",
-    collapseOpen: false
+    collapseOpen: false,
   };
 
   onExiting = () => {
     this.setState({
-      collapseClasses: "collapsing-out"
+      collapseClasses: "collapsing-out",
     });
   };
 
   onExited = () => {
     this.setState({
-      collapseClasses: ""
+      collapseClasses: "",
     });
   };
 
@@ -56,10 +56,9 @@ class DemoNavbar extends React.Component {
           >
             <Container>
               <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
-                
                 <img
                   alt="..."
-                  src={require("assets/img/brand/argon-react-white.png")}
+                  src={require("assets/img/churchapp-logo-garo.png")}
                 />
               </NavbarBrand>
               <button className="navbar-toggler" id="navbar_global">
@@ -92,20 +91,12 @@ class DemoNavbar extends React.Component {
                 </div>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
                   <NavItem>
-                    <NavLink
-                      className="nav-link-icon"
-                      href="/sign-in"
-                    >
-                      <span className="nav-link-inner--text ml-2">
-                        로그인
-                      </span>
+                    <NavLink className="nav-link-icon" href="/sign-in">
+                      <span className="nav-link-inner--text ml-2">로그인</span>
                     </NavLink>
                   </NavItem>
                   <NavItem>
-                    <NavLink
-                      className="nav-link-icon"
-                      href="/sign-up"
-                    >
+                    <NavLink className="nav-link-icon" href="/sign-up">
                       <span className="nav-link-inner--text ml-2">
                         가입하기
                       </span>
