@@ -38,7 +38,10 @@ export default function AvatarUpload(props) {
     formData.append("employeeId", props.employee.id);
 
     // TODO: Change the address to live server in Production.
-    fetch("http://localhost:4000/profile-image/upload", {
+    let url = "http://localhost:4000/profile-image/upload";
+    let liveServerUrl =
+      "https://churchapp-server.herokuapp.com/profile-image/upload";
+    fetch(liveServerUrl, {
       method: "POST",
       body: formData,
     })
