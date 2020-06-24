@@ -183,9 +183,9 @@ export function LatestVideosPage() {
       <GridContainer>
         <GridItem xs={12} sm={12} md={12} lg={12}>
           <Card>
-            <CardHeader text color="success">
-              <CardText color="success">
-                <h4>최근 설교 영상</h4>
+            <CardHeader text color="primary">
+              <CardText color="primary">
+                <h4 style={{ color: "white" }}>최근 설교 영상</h4>
                 앱에 표시될 최신 영상입니다. 영상은 최대 25개까지 앱에
                 표시됩니다.
                 <br />

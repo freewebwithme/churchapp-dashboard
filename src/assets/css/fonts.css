@@ -16,6 +16,8 @@ h4,
 h5,
 h6,
 p,
+div,
+small,
 span {
   font-family: "Nanum Myeongjo", serif, "Open Sans", sans-serif;
 }

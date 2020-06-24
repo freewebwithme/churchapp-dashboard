@@ -230,8 +230,8 @@ export function NewsPage() {
         <GridContainer>
           <GridItem xs={12} sm={12} md={12} lg={8}>
             <Card>
-              <CardHeader color="success" text>
-                <CardText color="success">
+              <CardHeader color="primary" text>
+                <CardText color="primary">
                   <h4 className={classes.cardHeaderText}>교회 소식</h4>
                   교회소식을 등록하세요. 교회소식은 앱에 처음페이지에 등록순으로
                   표시됩니다.
@@ -245,7 +245,7 @@ export function NewsPage() {
                   {hasChurch(currentUser) ? (
                     <Button
                       size="sm"
-                      color="primary"
+                      color="info"
                       onClick={(e) => {
                         e.preventDefault();
                         setCreateModal(true);

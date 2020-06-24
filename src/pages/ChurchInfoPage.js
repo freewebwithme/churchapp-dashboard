@@ -57,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
   cardTitle,
+  tabContent: {
+    marginLeft: 20,
+  },
 }));
 
 export function ChurchInfoPage() {
@@ -140,7 +143,7 @@ export function ChurchInfoPage() {
                   {
                     tabButton: "기본정보",
                     tabContent: (
-                      <span>
+                      <span className={classes.tabContent}>
                         <h5 className={classes.headerText}>교회 이름</h5>
                         <h6>{church.name}</h6>
                         <br />
@@ -171,6 +174,7 @@ export function ChurchInfoPage() {
                     tabContent: (
                       <span>
                         <h5 className={classes.headerText}>교회 주소</h5>
+                        <br />
                         {church.addressLineOne && church.addressLineTwo ? (
                           <span>
                             <h6>{church.addressLineOne}</h6>
