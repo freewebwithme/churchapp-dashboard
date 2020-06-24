@@ -8,11 +8,11 @@ import * as AbsintheSocket from "@absinthe/socket";
 import { createAbsintheSocketLink } from "@absinthe/socket-apollo-link";
 import { Socket as PhoenixSocket } from "phoenix";
 
-const HTTP_ENDPOINT = "http://localhost:4000/api";
-const WS_ENDPOINT = "ws://localhost:4000/socket";
+//const HTTP_ENDPOINT = "http://localhost:4000/api";
+//const WS_ENDPOINT = "ws://localhost:4000/socket";
 
-//const HTTP_ENDPOINT = "https://churchapp-server.herokuapp.com/api";
-//const WS_ENDPOINT = "ws://churchapp-server.herokuapp/socket";
+const HTTP_ENDPOINT = "https://churchapp-server.herokuapp.com/api";
+const WS_ENDPOINT = "ws://churchapp-server.herokuapp/socket";
 
 // Create an HTTP link to the Phoenix app's HTTP endpoint URL.
 const httpLink = createHttpLink({
