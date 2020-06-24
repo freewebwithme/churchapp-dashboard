@@ -18,7 +18,6 @@ import { useMutation } from "@apollo/react-hooks";
 import { SEND_PUSH } from "../queries/Query.js";
 import { getUserFromSession, hasChurch } from "../helpers/helper.js";
 import Loading from "./components/Loading";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -206,6 +205,8 @@ export const PushNotificationPage = () => {
                             message: message,
                           },
                         });
+                        setTitle("제목");
+                        setMessage("메세지");
                       }}
                     >
                       메세지 보내기
@@ -244,7 +245,9 @@ export const PushNotificationPage = () => {
                       color="textSecondary"
                       component="p"
                     >
-                      동부 장로 교회
+                      {hasChurch(currentUser)
+                        ? currentUser.church.name
+                        : "교회 없음"}
                     </Typography>
                   </Grid>
                   <Grid item xs={11}>

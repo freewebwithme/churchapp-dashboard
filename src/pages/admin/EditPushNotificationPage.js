@@ -226,6 +226,8 @@ export const EditPushNotificationPage = () => {
                             message: message,
                           },
                         });
+                        setTitle("제목");
+                        setMessage("메세지");
                       }}
                     >
                       메세지 보내기
@@ -264,7 +266,9 @@ export const EditPushNotificationPage = () => {
                       color="textSecondary"
                       component="p"
                     >
-                      동부 장로 교회
+                      {hasChurch(userData.getUser)
+                        ? userData.getUser.church.name
+                        : "No church"}
                     </Typography>
                   </Grid>
                   <Grid item xs={11}>
