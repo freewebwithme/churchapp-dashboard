@@ -9,6 +9,8 @@ export const SIGN_IN = gql`
         email
         phoneNumber
         admin
+        subscribed
+        stripeId
         church {
           id
           name
@@ -75,6 +77,8 @@ export const SIGN_UP = gql`
         email
         phoneNumber
         admin
+        subscribed
+        stripeId
         church {
           id
           name
@@ -215,6 +219,8 @@ export const CREATE_CHURCH = gql`
         name
         phoneNumber
         admin
+        subscribed
+        stripeId
       }
       latestVideos {
         id
@@ -231,6 +237,8 @@ export const ME = gql`
       name
       phoneNumber
       admin
+      subscribed
+      stripeId
       church {
         id
         name
@@ -550,6 +558,15 @@ export const SEND_EMAIL = gql`
       recaptchaValue: $recaptchaValue
     ) {
       success
+      message
+    }
+  }
+`;
+
+export const CREATE_SESSION_LINK = gql`
+  mutation($stripeId: String) {
+    createStripeRedirectUrl(stripeId: $stripeId) {
+      url
       message
     }
   }

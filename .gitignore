@@ -23,5 +23,5 @@ yarn-error.log*
 
 .log
 .log/*
-TODO
+.TODO
 .tern-port

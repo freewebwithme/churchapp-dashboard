@@ -3,12 +3,14 @@ import { EmployeePage } from "pages/EmployeePage.js";
 import { NewsPage } from "pages/NewsPage.js";
 import { LatestVideosPage } from "pages/LatestVideosPage.js";
 import { PushNotificationPage } from "pages/PushNotificationPage.js";
+import { SubscriptionPage } from "pages/SubscriptionPage";
 import { AppRequestPage } from "pages/AppRequestPage";
 import { ContactPage } from "pages/ContactPage";
 import Loading from "pages/components/Loading.js";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import EmailIcon from "@material-ui/icons/Email";
+import PaymentIcon from '@material-ui/icons/Payment';
 import {
   ImportContacts,
   AttachMoney,
@@ -52,6 +54,13 @@ var dashRoutes = [
     name: "Push Notification",
     icon: NotificationsActiveIcon,
     component: PushNotificationPage,
+    layout: "/dashboard",
+  },
+  {
+    path: "/subscription",
+    name: "Subscription",
+    icon: PaymentIcon,
+    component: SubscriptionPage,
     layout: "/dashboard",
   },
   {

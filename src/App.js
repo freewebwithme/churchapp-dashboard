@@ -18,6 +18,8 @@ import { PrivateRoute } from "./protected/PrivateRoute";
 import { AdminRoute } from "./protected/AdminRoute";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
+import { TermsPage } from "./pages/TermsPage";
+import { PrivacyPage } from "./pages/PrivacyPage";
 
 const hist = createBrowserHistory();
 function App() {
@@ -27,7 +29,9 @@ function App() {
         <Route path="/" exact component={Landing} />
         <Route path="/sign-in" exact component={SignIn} />
         <Route path="/sign-up" exact component={SignUp} />
-        <Route path="/forgot-password/" exact component={ForgotPasswordPage} />
+        <Route path="/forgot-password" exact component={ForgotPasswordPage} />
+        <Route path="/termsofservice" exact component={TermsPage} />
+        <Route path="/privacy" exact component={PrivacyPage} />
         <Route
           path="/reset-password/:token"
           exact

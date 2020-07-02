@@ -26,6 +26,7 @@ import { LogoutPage } from "pages/LogoutPage";
 import { LatestVideosPage } from "pages/LatestVideosPage.js";
 import { AppRequestPage } from "pages/AppRequestPage";
 import { ContactPage } from "pages/ContactPage";
+import { SubscriptionPage } from "pages/SubscriptionPage";
 
 import { getUserFromSession, setUserToSession } from "../helpers/helper.js";
 import dashRoutes from "routes.js";
@@ -196,6 +197,7 @@ export default function Dashboard(props) {
                 exact
                 component={AppRequestPage}
               />
+              <Route path="/dashboard/subscription" exact component={SubscriptionPage} />
               <Route path="/dashboard/contact" exact component={ContactPage} />
               <Route path="/dashboard/log-out" exact component={LogoutPage} />
             </Switch>
