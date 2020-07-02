@@ -7,21 +7,22 @@ import { hasSubscription } from "@jumpn/utils-graphql";
 import * as AbsintheSocket from "@absinthe/socket";
 import { createAbsintheSocketLink } from "@absinthe/socket-apollo-link";
 import { Socket as PhoenixSocket } from "phoenix";
+import { serverHTTPHost, serverWSHost } from "api-config";
 
-const HTTP_ENDPOINT = "http://localhost:4000/api";
-const WS_ENDPOINT = "ws://localhost:4000/socket";
+//const HTTP_ENDPOINT = "http://localhost:4000/api";
+//const WS_ENDPOINT = "ws://localhost:4000/socket";
 
 //const HTTP_ENDPOINT = "https://churchapp-server.herokuapp.com/api";
 //const WS_ENDPOINT = "ws://churchapp-server.herokuapp/socket";
 
 // Create an HTTP link to the Phoenix app's HTTP endpoint URL.
 const httpLink = createHttpLink({
-  uri: HTTP_ENDPOINT,
+  uri: serverHTTPHost,
 });
 
 // Create a WebSocket link to the Phoenix app's socket URL.
 const socketLink = createAbsintheSocketLink(
-  AbsintheSocket.create(new PhoenixSocket(WS_ENDPOINT))
+  AbsintheSocket.create(new PhoenixSocket(serverWSHost))
 );
 
 // If an authentication token exists in local storage, put
