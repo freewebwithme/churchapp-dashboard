@@ -20,6 +20,7 @@ import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { TermsPage } from "./pages/TermsPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
+import { PageNotFound } from "./pages/PageNotFound";
 
 const hist = createBrowserHistory();
 function App() {
@@ -43,6 +44,8 @@ function App() {
         <PrivateRoute path="/dashboard">
           <Dashboard />
         </PrivateRoute>
+
+        <Route component={PageNotFound} />
       </Switch>
     </BrowserRouter>
   );
