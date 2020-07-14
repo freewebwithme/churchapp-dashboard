@@ -406,9 +406,8 @@ const Landing = () => {
                       <div className="pl-4">
                         <h5 className="title text-primary">3. 데모앱 확인</h5>
                         <p>
-                          개발자가 준비된 앱을 이메일로 보내드립니다. 그러면
-                          핸드폰에 설치하신 후에 여러가지 테스트를 해본후 저희
-                          팀에게 컨펌을 해주십니다.
+                          개발자가 준비된 앱을 볼수 있게 이메일로 링크를
+                          보내드립니다.
                         </p>
                       </div>
                     </div>
@@ -426,8 +425,8 @@ const Landing = () => {
                         <h5 className="title text-info">4. 앱 출시</h5>
                         <p>
                           앱 테스트를 마친후 변경 사항이 없으시면 이제 개발자가
-                          앱 출시를 위한 준비과정을 거친후 구글 PlayStore와
-                          Apple AppStore에 각자의 교회 이름으로 앱을 출시
+                          앱 출시를 위한 준비과정을 거친후 Google Play Store와
+                          Apple App Store에 각자의 교회 이름으로 앱을 출시
                           하게됩니다.
                         </p>
                       </div>
